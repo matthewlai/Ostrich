@@ -1,0 +1,10 @@
+(fp_lib_table
+  (lib (name Housings_QFP)(type KiCad)(uri "$(KIPRJMOD)/footprints/Housings_QFP.pretty-master")(options "")(descr ""))
+  (lib (name TSOPII)(type KiCad)(uri "$(KIPRJMOD)/footprints/TSOPII")(options "")(descr ""))
+  (lib (name ER-CON40HB-2)(type KiCad)(uri "$(KIPRJMOD)/footprints/ER-CON40HB-2")(options "")(descr ""))
+  (lib (name LL3301NF065QG)(type KiCad)(uri "$(KIPRJMOD)/footprints/LL3301NF065QG")(options "")(descr ""))
+  (lib (name USB)(type KiCad)(uri "$(KIPRJMOD)/footprints/USB")(options "")(descr ""))
+  (lib (name ESP-11)(type KiCad)(uri "$(KIPRJMOD)/footprints/ESP-11")(options "")(descr ""))
+  (lib (name Amphenol)(type KiCad)(uri "$(KIPRJMOD)/footprints/Amphenol")(options "")(descr ""))
+  (lib (name Mechanical)(type KiCad)(uri "$(KIPRJMOD)/footprints/Mechanical")(options "")(descr ""))
+)

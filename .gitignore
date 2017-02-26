@@ -1,2 +1,8 @@
 *.d
 *.o
+
+# kicad backup files
+*_autosave-*
+*_saved_*
+*.bak
+*-bak
