@@ -26,6 +26,13 @@ Q		:= @
 NULL		:= 2>/dev/null
 endif
 
+LIBNAME         				= opencm3_stm32f7
+OSTRICH_LIBNAME					= ostrich
+DEFS            				+= -DSTM32F7
+
+FP_FLAGS        				?= -mfloat-abi=hard -mfpu=fpv5-sp-d16
+ARCH_FLAGS      				= -mthumb -mcpu=cortex-m7 $(FP_FLAGS)
+
 ###############################################################################
 # Executables
 
@@ -38,49 +45,55 @@ AR		:= $(PREFIX)-ar
 AS		:= $(PREFIX)-as
 OBJCOPY		:= $(PREFIX)-objcopy
 OBJDUMP		:= $(PREFIX)-objdump
-GDB		?= $(PREFIX)-gdb
-STFLASH		= $(shell which st-flash)
-OPT		?= -O2
-CSTD		?= -std=c99
+GDB		   	?= $(PREFIX)-gdb
+OPT				?= -O2
+CSTD			?= -std=c99
 CXXSTD		?= -std=gnu++14
 
 
 ###############################################################################
 # Source files
-SRCS_BASE	:= $(basename $(SRCS))
+SRCS_BASE				:= $(basename $(SRCS))
 
-OBJS		:= $(SRCS_BASE:src/%=obj/%.o)
+OBJS						:= $(SRCS_BASE:src/%=obj/%.o)
 
-INCLUDES	:= $(INCLUDE:%=-I%)
+INCLUDES				:= $(INCLUDE:%=-I%)
 
-OPENCM3_DIR := $(OSTRICH_PATH)/libopencm3
+OPENCM3_DIR 		:= $(OSTRICH_PATH)/libopencm3
+
+# Path to the static library for our target
+LIBPATH	=	$(OSTRICH_PATH)/libopencm3/lib/lib$(LIBNAME).a
+OSTRICH_LIBPATH = $(OSTRICH_PATH)/libostrich/lib$(OSTRICH_LIBNAME).a
+
+ifneq ($(MAKECMDGOALS), clean)
+ifeq ($(wildcard $(LIBPATH)),)
+$(info lib$(LIBNAME).a not found. Building libopencm3. \
+	This will take a while, but only has to be done once.)
+# Make sure libraries are up to date
+$(shell cd $(OPENCM3_DIR) && make 1>&2)
+endif
+
+ifeq ($(wildcard $(OSTRICH_LIBPATH)),)
+ifneq ($(MODE),ostrich)
+$(info lib$(OSTRICH_LIBNAME).a not found. Building libostrich.)
+# Make sure libraries are up to date
+$(shell cd $(OSTRICH_PATH)/libostrich && make 1>&2)
+endif
+endif
+
+ifneq ($(MODE),ostrich)
+LDLIBS		+= -L$(OSTRICH_PATH)/libostrich -l$(OSTRICH_LIBNAME)
+endif
+
+endif
 
 ifeq ($(V),1)
 $(info Using $(OPENCM3_DIR) path to library)
 endif
 
-define ERR_DEVICE_LDSCRIPT_CONFLICT
-You can either specify DEVICE=blah, and have the LDSCRIPT generated,
-or you can provide LDSCRIPT, and ensure CPPFLAGS, LDFLAGS and LDLIBS
-all contain the correct values for the target you wish to use.
-You cannot provide both!
-endef
-
-ifeq ($(strip $(DEVICE)),)
-# Old style, assume LDSCRIPT exists
-DEFS		+= -I$(OPENCM3_DIR)/include
-LDFLAGS		+= -L$(OPENCM3_DIR)/lib
-LDLIBS		+= -l$(LIBNAME)
-LDSCRIPT	?= $(BINARY).ld
-else
-# New style, assume device is provided, and we're generating the rest.
-ifneq ($(strip $(LDSCRIPT)),)
-$(error $(ERR_DEVICE_LDSCRIPT_CONFLICT))
-endif
+ifneq ($(MAKECMDGOALS), clean)
 include $(OPENCM3_DIR)/mk/genlink-config.mk
 endif
-
-SCRIPT_DIR	= $(OPENCM3_DIR)/scripts
 
 ###############################################################################
 # C flags
@@ -133,26 +146,25 @@ LDLIBS		+= -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
 .SECONDEXPANSION:
 .SECONDARY:
 
+ifeq ($(MODE),ostrich)
+all: library clean_intermediate
+else
 all: bin clean_intermediate
+endif
 
 elf: $(BINARY).elf
 bin: $(BINARY).bin
 hex: $(BINARY).hex
 srec: $(BINARY).srec
 list: $(BINARY).list
+library: lib$(LIBRARY).a
 
 images: $(BINARY).images
 flash: $(BINARY).flash
 
-# Either verify the user provided LDSCRIPT exists, or generate it.
-ifeq ($(strip $(DEVICE)),)
-$(LDSCRIPT):
-    ifeq (,$(wildcard $(LDSCRIPT)))
-        $(error Unable to find specified linker script: $(LDSCRIPT))
-    endif
-else
-include $(OPENCM3_DIR)/mk/genlink-rules.mk
-endif
+$(LDSCRIPT): $(OPENCM3_DIR)/ld/linker.ld.S
+	@#printf "  GENLNK  $(DEVICE)\n"
+	$(Q)$(CPP) $(ARCH_FLAGS) $(shell awk -v PAT="$(DEVICE)" -v MODE="DEFS" -f $(OPENCM3_DIR)/scripts/genlink.awk $(OPENCM3_DIR)/ld/devices.data 2>/dev/null) -P -E $< > $@
 
 # Define a helper macro for debugging make errors online
 # you can type "make print-OPENCM3_DIR" and it will show you
@@ -184,6 +196,10 @@ print-%:
 	@#printf "  LD      $(*).elf\n"
 	$(Q)$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(*).elf
 
+%.a: $(OBJS)
+	@#printf "  AR      $(*).a"
+	$(Q)$(AR) rcs $@ $(OBJS)
+
 obj/%.o: src/%.c
 	@#printf "  CC      $(*).c\n"
 	$(Q)$(CC) $(TGT_CFLAGS) $(CFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $@ -c $<
@@ -198,50 +214,11 @@ obj/%.o: src/%.cpp
 
 clean:
 	@#printf "  CLEAN\n"
-	$(Q)$(RM) obj/*.o obj/*.d *.elf *.bin *.hex *.srec *.list *.map generated.* ${OBJS} ${OBJS:%.o:%.d}
+	$(Q)$(RM) obj/*.o obj/*.d *.a *.elf *.bin *.hex *.srec *.list *.map generated.* ${OBJS} ${OBJS:%.o:%.d}
 
 clean_intermediate:
 	@#printf "  CLEAN_INTERMEDIATE\n"
-	$(Q)$(RM) obj/*.o obj/*.d *.hex *.srec *.list *.map generated.* ${OBJS} ${OBJS:%.o:%.d}
-
-%.stlink-flash: %.bin
-	@printf "  FLASH  $<\n"
-	$(STFLASH) write $(*).bin 0x8000000
-
-ifeq ($(STLINK_PORT),)
-ifeq ($(BMP_PORT),)
-ifeq ($(OOCD_FILE),)
-%.flash: %.elf
-	@printf "  FLASH   $<\n"
-	(echo "halt; program $(realpath $(*).elf) verify reset" | nc -4 localhost 4444 2>/dev/null) || \
-		$(OOCD) -f interface/$(OOCD_INTERFACE).cfg \
-		-f target/$(OOCD_TARGET).cfg \
-		-c "program $(*).elf verify reset exit" \
-		$(NULL)
-else
-%.flash: %.elf
-	@printf "  FLASH   $<\n"
-	(echo "halt; program $(realpath $(*).elf) verify reset" | nc -4 localhost 4444 2>/dev/null) || \
-		$(OOCD) -f $(OOCD_FILE) \
-		-c "program $(*).elf verify reset exit" \
-		$(NULL)
-endif
-else
-%.flash: %.elf
-	@printf "  GDB   $(*).elf (flash)\n"
-	$(GDB) --batch \
-		   -ex 'target extended-remote $(BMP_PORT)' \
-		   -x $(SCRIPT_DIR)/black_magic_probe_flash.scr \
-		   $(*).elf
-endif
-else
-%.flash: %.elf
-	@printf "  GDB   $(*).elf (flash)\n"
-	$(GDB) --batch \
-		   -ex 'target extended-remote $(STLINK_PORT)' \
-		   -x $(SCRIPT_DIR)/stlink_flash.scr \
-		   $(*).elf
-endif
+	$(Q)$(RM) *.hex *.srec *.list *.map generated.*
 
 .PHONY: images clean clean_intermediate elf bin hex srec list
 

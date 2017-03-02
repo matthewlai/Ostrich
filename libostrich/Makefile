@@ -18,9 +18,7 @@
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-###### Project configuration ######
-# Name of the main binary
-BINARY = test
+LIBRARY = ostrich
 
 # .c, .cpp, and .cxx files
 SRCS = $(wildcard src/*.c) $(wildcard src/*.cpp) $(wildcard src/*.cxx)
@@ -28,13 +26,13 @@ SRCS = $(wildcard src/*.c) $(wildcard src/*.cpp) $(wildcard src/*.cxx)
 # Directories containing header files
 INCLUDE = include
 
-# Chip part number
+# Chip part number (this is mostly unused for building a library, but defines
+# a few useful constants). We can use any stm32f7 part number here.
 DEVICE = stm32f767zit6u
 
-
-###### DO NOT CHANGE BELOW THIS LINE ######
 ifeq ($(strip $(OSTRICH_PATH)),)
 $(error OSTRICH_PATH undefined!)
 endif
 
-include $(OSTRICH_PATH)/Makefiles/rules.mk
+MODE = ostrich
+include $(OSTRICH_PATH)/Makefiles/Makefile.stm32f7
