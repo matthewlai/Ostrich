@@ -38,27 +38,22 @@ AR		:= $(PREFIX)-ar
 AS		:= $(PREFIX)-as
 OBJCOPY		:= $(PREFIX)-objcopy
 OBJDUMP		:= $(PREFIX)-objdump
-GDB		:= $(PREFIX)-gdb
+GDB		?= $(PREFIX)-gdb
 STFLASH		= $(shell which st-flash)
-OPT		:= -O2
+OPT		?= -O2
 CSTD		?= -std=c99
-CXXSTD		?= -std=c++14
+CXXSTD		?= -std=gnu++14
 
 
 ###############################################################################
 # Source files
+SRCS_BASE	:= $(basename $(SRCS))
 
-OBJS		+= $(BINARY).o
+OBJS		:= $(SRCS_BASE:src/%=obj/%.o)
 
-
-ifeq ($(strip $(OPENCM3_DIR)),)
-# user has not specified the library path, so we try to detect it
-
-# where we search for the library
-LIBPATHS := ../libopencm3
+INCLUDES	:= $(INCLUDE:%=-I%)
 
 OPENCM3_DIR := $(OSTRICH_PATH)/libopencm3
-endif
 
 ifeq ($(V),1)
 $(info Using $(OPENCM3_DIR) path to library)
@@ -92,6 +87,7 @@ SCRIPT_DIR	= $(OPENCM3_DIR)/scripts
 
 TGT_CFLAGS	+= $(OPT) $(CSTD) -g
 TGT_CFLAGS	+= $(ARCH_FLAGS)
+TGT_CFLAGS	+= $(INCLUDES)
 TGT_CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
 TGT_CFLAGS	+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
 TGT_CFLAGS	+= -fno-common -ffunction-sections -fdata-sections
@@ -101,6 +97,7 @@ TGT_CFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 
 TGT_CXXFLAGS	+= $(OPT) $(CXXSTD) -g
 TGT_CXXFLAGS	+= $(ARCH_FLAGS)
+TGT_CXXFLAGS	+= $(INCLUDES)
 TGT_CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls  -Weffc++
 TGT_CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 
@@ -187,25 +184,25 @@ print-%:
 	@#printf "  LD      $(*).elf\n"
 	$(Q)$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(*).elf
 
-%.o: %.c
+obj/%.o: src/%.c
 	@#printf "  CC      $(*).c\n"
-	$(Q)$(CC) $(TGT_CFLAGS) $(CFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $(*).o -c $(*).c
+	$(Q)$(CC) $(TGT_CFLAGS) $(CFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $@ -c $<
 
-%.o: %.cxx
+obj/%.o: src/%.cxx
 	@#printf "  CXX     $(*).cxx\n"
-	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $(*).o -c $(*).cxx
+	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $@ -c $<
 
-%.o: %.cpp
+obj/%.o: src/%.cpp
 	@#printf "  CXX     $(*).cpp\n"
-	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $(*).o -c $(*).cpp
+	$(Q)$(CXX) $(TGT_CXXFLAGS) $(CXXFLAGS) $(TGT_CPPFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 clean:
 	@#printf "  CLEAN\n"
-	$(Q)$(RM) *.o *.d *.elf *.bin *.hex *.srec *.list *.map generated.* ${OBJS} ${OBJS:%.o:%.d}
+	$(Q)$(RM) obj/*.o obj/*.d *.elf *.bin *.hex *.srec *.list *.map generated.* ${OBJS} ${OBJS:%.o:%.d}
 
 clean_intermediate:
 	@#printf "  CLEAN_INTERMEDIATE\n"
-	$(Q)$(RM) *.o *.d *.elf *.hex *.srec *.list *.map generated.* ${OBJS} ${OBJS:%.o:%.d}
+	$(Q)$(RM) obj/*.o obj/*.d *.hex *.srec *.list *.map generated.* ${OBJS} ${OBJS:%.o:%.d}
 
 %.stlink-flash: %.bin
 	@printf "  FLASH  $<\n"
