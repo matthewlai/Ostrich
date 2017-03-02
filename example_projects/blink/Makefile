@@ -25,7 +25,7 @@ BINARY = test
 # .c, .cpp, and .cxx files
 SRCS = $(wildcard src/*.c) $(wildcard src/*.cpp) $(wildcard src/*.cxx)
 
-# directories containing header files
+# Directories containing header files
 INCLUDE = include
 
 # Chip part number
