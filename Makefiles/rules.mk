@@ -26,12 +26,12 @@ Q		:= @
 NULL		:= 2>/dev/null
 endif
 
-LIBNAME         				= opencm3_stm32f7
-OSTRICH_LIBNAME					= ostrich
-DEFS            				+= -DSTM32F7
+LIBNAME         = opencm3_stm32f7
+OSTRICH_LIBNAME	= ostrich
+DEFS            += -DSTM32F7
 
-FP_FLAGS        				?= -mfloat-abi=hard -mfpu=fpv5-sp-d16
-ARCH_FLAGS      				= -mthumb -mcpu=cortex-m7 $(FP_FLAGS)
+FP_FLAGS        ?= -mfloat-abi=hard -mfpu=fpv5-d16
+ARCH_FLAGS      = -mthumb -mcpu=cortex-m7 $(FP_FLAGS)
 
 ###############################################################################
 # Executables
@@ -45,24 +45,26 @@ AR		:= $(PREFIX)-ar
 AS		:= $(PREFIX)-as
 OBJCOPY		:= $(PREFIX)-objcopy
 OBJDUMP		:= $(PREFIX)-objdump
-GDB		   	?= $(PREFIX)-gdb
-OPT				?= -O2
-CSTD			?= -std=c99
+GDB		?= $(PREFIX)-gdb
+OPT		?= -O2
+CSTD		?= -std=c99
 CXXSTD		?= -std=gnu++14
 
 
 ###############################################################################
 # Source files
-SRCS_BASE				:= $(basename $(SRCS))
+SRCS_BASE	:= $(basename $(SRCS))
 
-OBJS						:= $(SRCS_BASE:src/%=obj/%.o)
+OBJS		:= $(SRCS_BASE:src/%=obj/%.o)
 
-INCLUDES				:= $(INCLUDE:%=-I%)
+INCLUDE 	+= $(OSTRICH_PATH)/libopencm3/include
+INCLUDE         += $(OSTRICH_PATH)/libostrich/include
+INCLUDES	:= $(INCLUDE:%=-I%)
 
-OPENCM3_DIR 		:= $(OSTRICH_PATH)/libopencm3
+OPENCM3_DIR 	:= $(OSTRICH_PATH)/libopencm3
 
 # Path to the static library for our target
-LIBPATH	=	$(OSTRICH_PATH)/libopencm3/lib/lib$(LIBNAME).a
+LIBPATH		= $(OSTRICH_PATH)/libopencm3/lib/lib$(LIBNAME).a
 OSTRICH_LIBPATH = $(OSTRICH_PATH)/libostrich/lib$(OSTRICH_LIBNAME).a
 
 ifneq ($(MAKECMDGOALS), clean)
