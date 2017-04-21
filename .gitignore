@@ -3,6 +3,7 @@
 *.bin
 *.elf
 *.a
+ostrich.sublime-workspace
 
 # kicad backup files
 *_autosave-*
