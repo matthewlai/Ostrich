@@ -32,11 +32,11 @@ namespace Ostrich {
 using GPIOPortPin = uint64_t;
 
 constexpr uint32_t UnpackPort(GPIOPortPin portpin) {
-	return portpin >> 32;
+  return portpin >> 32;
 }
 
 constexpr uint16_t UnpackPin(GPIOPortPin portpin) {
-	return static_cast<uint16_t>(portpin & 0xffff);
+  return static_cast<uint16_t>(portpin & 0xffff);
 }
 
 namespace GpioDefs {

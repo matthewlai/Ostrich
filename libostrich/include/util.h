@@ -23,10 +23,10 @@
 namespace Ostrich {
 
 class NonCopyable {
-protected:
+ protected:
 	NonCopyable() {}
 	~NonCopyable() {} // Do not allow deleting through base pointer
-private:
+ private:
 	NonCopyable(const NonCopyable&) = delete;
 	NonCopyable& operator=(const NonCopyable&) = delete;
 };

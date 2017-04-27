@@ -28,36 +28,36 @@ OutputPin<PIN_B7> blue_led;
 OutputPin<PIN_B0> green_led;
 
 int main() {
-	SetupClocks();
+  SetupClocks();
 
-	while (true) {
-		red_led = 1;
-		blue_led = 0;
-		green_led = 1;
-		for (int i = 0; i < (216000000 / 4); i++) {
-			// Woohoo! Double issue!
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-		}
-		
-		red_led = 0;
-		blue_led = 1;
-		green_led = 0;
-		for (int i = 0; i < (216000000 / 4); i++) {
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-		}
-	}
+  while (true) {
+    red_led = 1;
+    blue_led = 0;
+    green_led = 1;
+    for (int i = 0; i < (216000000 / 4); i++) {
+      // Woohoo! Double issue!
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+    }
+    
+    red_led = 0;
+    blue_led = 1;
+    green_led = 0;
+    for (int i = 0; i < (216000000 / 4); i++) {
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+      __asm__("nop");
+    }
+  }
 }

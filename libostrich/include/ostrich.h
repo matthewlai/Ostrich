@@ -27,17 +27,17 @@
 namespace Ostrich {
 
 struct ClockInfo {
-	rcc_clock_scale clock_scale;
-	uint8_t hse_mhz;
-	bool external;
+  rcc_clock_scale clock_scale;
+  uint8_t hse_mhz;
+  bool external;
 };
 
 inline void SetupClocks(const ClockInfo& ci) {
-	if (ci.external) {
-		rcc_clock_setup_hse(&ci.clock_scale, ci.hse_mhz);
-	} else {
-		rcc_clock_setup_hsi(&ci.clock_scale);
-	}
+  if (ci.external) {
+    rcc_clock_setup_hse(&ci.clock_scale, ci.hse_mhz);
+  } else {
+    rcc_clock_setup_hsi(&ci.clock_scale);
+  }
 }
 
 }; // namespace Ostrich
