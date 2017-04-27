@@ -17,47 +17,21 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "board_config.h"
+#ifndef __BOARD_CONFIG_H__
+#define __BOARD_CONFIG_H__
+
 #include "ostrich.h"
 
-using Ostrich::OutputPin;
-using namespace Ostrich::GpioDefs;
+#include <libopencm3/stm32/rcc.h>
 
-OutputPin<PIN_B14> red_led;
-OutputPin<PIN_B7> blue_led;
-OutputPin<PIN_B0> green_led;
+inline void SetupClocks() {
+	Ostrich::ClockInfo ci;
 
-int main() {
-	SetupClocks();
-
-	while (true) {
-		red_led = 1;
-		blue_led = 0;
-		green_led = 1;
-		for (int i = 0; i < (216000000 / 4); i++) {
-			// Woohoo! Double issue!
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-		}
-		
-		red_led = 0;
-		blue_led = 1;
-		green_led = 0;
-		for (int i = 0; i < (216000000 / 4); i++) {
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-			__asm__("nop");
-		}
-	}
+	ci.clock_scale = rcc_3v3[RCC_CLOCK_3V3_216MHZ];
+	ci.hse_mhz = 8;
+	ci.external = true;
+	
+	Ostrich::SetupClocks(ci);
 }
+
+#endif // __BOARD_CONFIG_H__

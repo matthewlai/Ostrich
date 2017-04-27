@@ -20,13 +20,13 @@
 
 ###### Project configuration ######
 # Name of the main binary
-BINARY = test
+BINARY = blink
 
 # .c, .cpp, and .cxx files
 SRCS = $(wildcard src/*.c) $(wildcard src/*.cpp) $(wildcard src/*.cxx)
 
 # Directories containing header files
-INCLUDE = include
+INCLUDE = include .
 
 # Chip part number
 DEVICE = stm32f767zit6u
