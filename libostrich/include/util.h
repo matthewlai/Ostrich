@@ -17,7 +17,20 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ostrich.h"
+#ifndef __UTIL_H__
+#define __UTIL_H__
 
 namespace Ostrich {
+
+class NonCopyable {
+protected:
+	NonCopyable() {}
+	~NonCopyable() {} // Do not allow deleting through base pointer
+private:
+	NonCopyable(const NonCopyable&) = delete;
+	NonCopyable& operator=(const NonCopyable&) = delete;
+};
+
 }; // namespace Ostrich
+
+#endif // __UTIL_H__

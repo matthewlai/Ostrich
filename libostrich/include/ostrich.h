@@ -17,7 +17,29 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ostrich.h"
+#ifndef __OSTRICH_H__
+#define __OSTRICH_H__
+
+#include "gpio.h"
+
+#include <libopencm3/stm32/rcc.h>
 
 namespace Ostrich {
+
+struct ClockInfo {
+	rcc_clock_scale clock_scale;
+	uint8_t hse_mhz;
+	bool external;
+};
+
+inline void SetupClocks(const ClockInfo& ci) {
+	if (ci.external) {
+		rcc_clock_setup_hse(&ci.clock_scale, ci.hse_mhz);
+	} else {
+		rcc_clock_setup_hsi(&ci.clock_scale);
+	}
+}
+
 }; // namespace Ostrich
+
+#endif // __OSTRICH_H__

@@ -17,7 +17,16 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ostrich.h"
+#include <iostream>
+#include <string>
 
-namespace Ostrich {
-}; // namespace Ostrich
+constexpr int kNumGpioPorts = 11;
+
+int main() {
+	for (int x = 0; x < kNumGpioPorts; ++x) {
+		for (int pin = 0; pin < 16; ++pin) {
+			std::cout << "constexpr GPIOPortPin PIN_" << 
+				static_cast<char>('A' + x) << pin << " = (static_cast<uint64_t>(GPIO" << static_cast<char>('A' + x) << ") << 32) | (1 << " << pin << ");" << std::endl;
+		}
+	}
+}
