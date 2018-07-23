@@ -24,14 +24,17 @@
 
 #include <libopencm3/stm32/rcc.h>
 
-inline void SetupClocks() {
-  Ostrich::ClockInfo ci;
+inline Ostrich::InitInfo DefaultInitInfo() {
+  Ostrich::InitInfo ii;
 
-  ci.clock_scale = rcc_3v3[RCC_CLOCK_3V3_216MHZ];
-  ci.hse_mhz = 8;
-  ci.external = true;
-  
-  Ostrich::SetupClocks(ci);
+  ii.clock_scale = rcc_3v3[RCC_CLOCK_3V3_216MHZ];
+  ii.hse_mhz = 8;
+  ii.use_hse = true;
+
+  // 1 ms.
+  ii.systick_period_ns = 1000000;
+
+  return ii;
 }
 
 #endif // __BOARD_CONFIG_H__

@@ -18,17 +18,18 @@
  */
 
 #include "board_config.h"
+#include "gpio_defs.h"
 #include "ostrich.h"
 
 using Ostrich::OutputPin;
-using namespace Ostrich::GpioDefs;
+using namespace Ostrich::GpioDef;
 
 OutputPin<PIN_B14> red_led;
 OutputPin<PIN_B7> blue_led;
 OutputPin<PIN_B0> green_led;
 
 int main() {
-  SetupClocks();
+  Ostrich::Init(DefaultInitInfo());
 
   while (true) {
     red_led = 1;

@@ -10,3 +10,4 @@ ostrich.sublime-workspace
 *_saved_*
 *.bak
 *-bak
+*.DS_Store

@@ -22,22 +22,44 @@
 
 #include "gpio.h"
 
+#include <cstdint>
+
 #include <libopencm3/stm32/rcc.h>
 
 namespace Ostrich {
 
-struct ClockInfo {
+extern uint32_t g_ahb_freq;
+extern uint32_t g_apb1_freq;
+extern uint32_t g_apb2_freq;
+
+struct InitInfo {
+  // Clock settings. See libopencm3/lib/stm32/*/rcc.c.
   rcc_clock_scale clock_scale;
+
+  // Use high speed external oscillator.
+  bool use_hse; 
+
+  // High speed external oscillator frequency. Unused if use_hse is not set.
   uint8_t hse_mhz;
-  bool external;
+
+  // Timing resolution in nanoseconds. Reasonable values depend on AHB clock
+  // frequency (usually the same as CPU clock frequency). It should be at least
+  // hundreds of CPU cycles. For example, at 200 MHz, cycle time is 5 ns, and
+  // period of 1 us would be the upper-bound of reasonable (otherwise the CPU
+  // will spend a significant portion of the time servicing systick interrupts).
+  uint64_t systick_period_ns;
 };
 
-inline void SetupClocks(const ClockInfo& ci) {
-  if (ci.external) {
-    rcc_clock_setup_hse(&ci.clock_scale, ci.hse_mhz);
+inline void Init(const InitInfo& ii) {
+  if (ii.use_hse) {
+    rcc_clock_setup_hse(&ii.clock_scale, ii.hse_mhz);
   } else {
-    rcc_clock_setup_hsi(&ci.clock_scale);
+    rcc_clock_setup_hsi(&ii.clock_scale);
   }
+
+  g_ahb_freq = ii.clock_scale.ahb_frequency;
+  g_apb1_freq = ii.clock_scale.apb1_frequency;
+  g_apb2_freq = ii.clock_scale.apb2_frequency;
 }
 
 }; // namespace Ostrich

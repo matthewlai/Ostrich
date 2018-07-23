@@ -127,7 +127,7 @@ TGT_CPPFLAGS	+= $(DEFS)
 ###############################################################################
 # Linker flags
 
-TGT_LDFLAGS		+= --static -nostartfiles
+TGT_LDFLAGS		+= --static -nostartfiles --specs=nano.specs
 TGT_LDFLAGS		+= -T$(LDSCRIPT)
 TGT_LDFLAGS		+= $(ARCH_FLAGS)
 TGT_LDFLAGS		+= -Wl,-Map=$(*).map
@@ -167,7 +167,7 @@ flash: $(BINARY).flash
 
 $(LDSCRIPT): $(OPENCM3_DIR)/ld/linker.ld.S
 	@#printf "  GENLNK  $(DEVICE)\n"
-	$(Q)$(CPP) $(ARCH_FLAGS) $(shell awk -v PAT="$(DEVICE)" -v MODE="DEFS" -f $(OPENCM3_DIR)/scripts/genlink.awk $(OPENCM3_DIR)/ld/devices.data 2>/dev/null) -P -E $< > $@
+	$(Q)$(CPP) $(ARCH_FLAGS) $(shell $(OPENCM3_DIR)/scripts/genlink.py $(DEVICES_DATA) $(DEVICE) DEFS) -P -E $< > $@
 
 # Define a helper macro for debugging make errors online
 # you can type "make print-OPENCM3_DIR" and it will show you
