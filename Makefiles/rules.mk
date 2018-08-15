@@ -132,6 +132,7 @@ TGT_LDFLAGS		+= -T$(LDSCRIPT)
 TGT_LDFLAGS		+= $(ARCH_FLAGS)
 TGT_LDFLAGS		+= -Wl,-Map=$(*).map
 TGT_LDFLAGS		+= -Wl,--gc-sections
+TGT_LDFLAGS		+= -Wl,--undefined=InitOstrich
 ifeq ($(V),99)
 TGT_LDFLAGS		+= -Wl,--print-gc-sections
 endif

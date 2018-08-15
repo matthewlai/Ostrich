@@ -64,4 +64,14 @@ inline void Init(const InitInfo& ii) {
 
 }; // namespace Ostrich
 
+extern "C" {
+// Here we have to make sure InitOstrich is called before main, and before any
+// other Ostrich objects are static initialized. We use GCC's extensions for
+// this, but this is complicated by the fact that libostrich is a static
+// library, and if the user doesn't refer to this symbol, it will be
+// thrown away by the linker!
+// We use the linker flag "-Wl,--undefined=InitOstrich" to work around that.
+void InitOstrich() __attribute__((constructor(1000)));
+}
+
 #endif // __OSTRICH_H__

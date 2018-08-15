@@ -17,7 +17,6 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "board_config.h"
 #include "gpio_defs.h"
 #include "ostrich.h"
 
@@ -29,8 +28,6 @@ OutputPin<PIN_B7> blue_led;
 OutputPin<PIN_B0> green_led;
 
 int main() {
-  Ostrich::Init(DefaultInitInfo());
-
   while (true) {
     red_led = 1;
     blue_led = 0;

@@ -25,4 +25,10 @@ uint32_t g_ahb_freq;
 uint32_t g_apb1_freq;
 uint32_t g_apb2_freq;
 
+Ostrich::InitInfo GetInitInfo();
+
 }; // namespace Ostrich
+
+void InitOstrich() {
+  Init(Ostrich::GetInitInfo());
+}
