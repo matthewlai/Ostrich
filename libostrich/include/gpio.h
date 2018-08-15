@@ -93,6 +93,26 @@ class OutputPin : NonCopyable {
   }
 };
 
+template <GPIOPortPin kPortPin>
+class InputPin : NonCopyable {
+ public:
+  /* pupd is GPIO_PUPD_NONE, GPIO_PUPD_PULLUP, or GPIO_PUPD_PULLDOWN */
+  InputPin(uint32_t pupd = GPIO_PUPD_NONE) {
+    GPIOManager::GetInstance().AllocatePins(UnpackPort(kPortPin),
+      UnpackPin(kPortPin));
+    gpio_mode_setup(UnpackPort(kPortPin), GPIO_MODE_INPUT, pupd,
+      UnpackPin(kPortPin));
+  }
+
+  bool value() const {
+    return gpio_get(UnpackPort(kPortPin), UnpackPin(kPortPin));
+  }
+
+  operator bool() const {
+    return value();
+  }
+};
+
 }; // namespace Ostrich
 
 #endif // __GPIO_H__
