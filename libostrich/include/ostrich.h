@@ -1,7 +1,7 @@
 /*
  * This file is part of the libostrich project.
  *
- * Copyright (C) 2017 Matthew Lai <m@matthewlai.ca>
+ * Copyright (C) 2018 Matthew Lai <m@matthewlai.ca>
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,14 +25,19 @@
 #include <cstdint>
 
 #include <libopencm3/stm32/rcc.h>
+#include <libopencm3/cm3/nvic.h>
 
 namespace Ostrich {
 
 extern uint32_t g_ahb_freq;
 extern uint32_t g_apb1_freq;
 extern uint32_t g_apb2_freq;
+extern uint32_t g_systick_period;
 
-struct InitInfo {
+extern volatile uint32_t g_systick_reloads_high;
+extern volatile uint32_t g_systick_reloads_low;
+
+struct BoardConfig {
   // Clock settings. See libopencm3/lib/stm32/*/rcc.c.
   rcc_clock_scale clock_scale;
 
@@ -42,24 +47,17 @@ struct InitInfo {
   // High speed external oscillator frequency. Unused if use_hse is not set.
   uint8_t hse_mhz;
 
-  // Timing resolution in nanoseconds. Reasonable values depend on AHB clock
-  // frequency (usually the same as CPU clock frequency). It should be at least
-  // hundreds of CPU cycles. For example, at 200 MHz, cycle time is 5 ns, and
-  // period of 1 us would be the upper-bound of reasonable (otherwise the CPU
-  // will spend a significant portion of the time servicing systick interrupts).
-  uint64_t systick_period_ns;
+  // How often we do housekeeping in AHB (usually the same as CPU) clock cycles.
+  // Reasonable values are in the hundreds, so the CPU doesn't spend excessive
+  // amount of time servicing systick interrupts.
+  uint64_t systick_period_clocks;
 };
 
-inline void Init(const InitInfo& ii) {
-  if (ii.use_hse) {
-    rcc_clock_setup_hse(&ii.clock_scale, ii.hse_mhz);
-  } else {
-    rcc_clock_setup_hsi(&ii.clock_scale);
-  }
+// This should be defined by the user.
+BoardConfig MakeBoardConfig();
 
-  g_ahb_freq = ii.clock_scale.ahb_frequency;
-  g_apb1_freq = ii.clock_scale.apb1_frequency;
-  g_apb2_freq = ii.clock_scale.apb2_frequency;
+inline void WaitForInterrupt() {
+  __asm__("wfi");
 }
 
 }; // namespace Ostrich

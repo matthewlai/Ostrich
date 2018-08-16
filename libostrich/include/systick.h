@@ -17,41 +17,17 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ostrich.h"
+#ifndef __SYSTICK_H__
+#define __SYSTICK_H__
 
-#include <libopencm3/cm3/systick.h>
-
-#include "systick.h"
+#include <cstdint>
 
 namespace Ostrich {
 
-uint32_t g_ahb_freq;
-uint32_t g_apb1_freq;
-uint32_t g_apb2_freq;
-uint32_t g_systick_period;
+void InitSystick();
+uint64_t GetTimeClocks();
+uint64_t GetTimeMilliseconds();
 
-volatile uint32_t g_systick_reloads_high;
-volatile uint32_t g_systick_reloads_low;
-
-void Init() {
-  auto board_config = MakeBoardConfig();
-
-  if (board_config.use_hse) {
-    rcc_clock_setup_hse(&board_config.clock_scale, board_config.hse_mhz);
-  } else {
-    rcc_clock_setup_hsi(&board_config.clock_scale);
-  }
-
-  g_ahb_freq = board_config.clock_scale.ahb_frequency;
-  g_apb1_freq = board_config.clock_scale.apb1_frequency;
-  g_apb2_freq = board_config.clock_scale.apb2_frequency;
-
-  g_systick_period = board_config.systick_period_clocks;
-
-  InitSystick();
-}
 }; // namespace Ostrich
 
-void InitOstrich() {
-  Ostrich::Init();
-}
+#endif // __SYSTICK_H__
