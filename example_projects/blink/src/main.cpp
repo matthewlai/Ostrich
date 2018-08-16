@@ -17,8 +17,11 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <libopencmsis/core_cm3.h>
+
 #include "gpio_defs.h"
 #include "ostrich.h"
+#include "systick.h"
 
 using Ostrich::OutputPin;
 using namespace Ostrich::GpioDef;
@@ -27,35 +30,26 @@ OutputPin<PIN_B14> red_led;
 OutputPin<PIN_B7> blue_led;
 OutputPin<PIN_B0> green_led;
 
-int main() {
+void Sleep(uint64_t milliseconds) {
+  auto start = Ostrich::GetTimeMilliseconds();
   while (true) {
-    red_led = 1;
+    auto elapsed = Ostrich::GetTimeMilliseconds() - start;
+    if (elapsed > milliseconds) {
+      break;
+    }
+    Ostrich::WaitForInterrupt();
+  }
+}
+
+int main() {
+  red_led = 0;
+  while (true) {
     blue_led = 0;
     green_led = 1;
-    for (int i = 0; i < (216000000 / 4); i++) {
-      // Woohoo! Double issue!
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-    }
+    Sleep(1000);
     
-    red_led = 0;
     blue_led = 1;
     green_led = 0;
-    for (int i = 0; i < (216000000 / 4); i++) {
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-      __asm__("nop");
-    }
+    Sleep(1000);
   }
 }
