@@ -17,8 +17,6 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <libopencmsis/core_cm3.h>
-
 #include "gpio_defs.h"
 #include "ostrich.h"
 #include "systick.h"
@@ -26,30 +24,32 @@
 using Ostrich::OutputPin;
 using namespace Ostrich::GpioDef;
 
-OutputPin<PIN_B14> red_led;
-OutputPin<PIN_B7> blue_led;
-OutputPin<PIN_B0> green_led;
+OutputPin<PIN_B4> led_0;
+OutputPin<PIN_B5> led_1;
+OutputPin<PIN_B6> led_2;
+OutputPin<PIN_B7> led_3;
 
 void Sleep(uint64_t milliseconds) {
-  auto start = Ostrich::GetTimeMilliseconds();
-  while (true) {
-    auto elapsed = Ostrich::GetTimeMilliseconds() - start;
-    if (elapsed > milliseconds) {
-      break;
-    }
+  auto end = Ostrich::GetTimeMilliseconds() + milliseconds;
+  while (Ostrich::GetTimeMilliseconds() < end) {
     Ostrich::WaitForInterrupt();
   }
 }
 
 int main() {
-  red_led = 0;
   while (true) {
-    blue_led = 0;
-    green_led = 1;
     Sleep(1000);
-    
-    blue_led = 1;
-    green_led = 0;
+
+    led_0 = 0;
+    led_1 = 1;
+    led_2 = 0;
+    led_3 = 1;
+
     Sleep(1000);
+
+    led_0 = 1;
+    led_1 = 0;
+    led_2 = 1;
+    led_3 = 0;
   }
 }
