@@ -139,12 +139,12 @@ class USBSerial : public std::streambuf, public std::iostream {
   int_type uflow() override;
 
  private:
- 	struct CDCFunctionalDescriptors {
- 		usb_cdc_header_descriptor header;
-		usb_cdc_call_management_descriptor call_mgmt;
-		usb_cdc_acm_descriptor acm;
-		usb_cdc_union_descriptor cdc_union;
- 	} __attribute__((packed));
+  struct CDCFunctionalDescriptors {
+    usb_cdc_header_descriptor header;
+    usb_cdc_call_management_descriptor call_mgmt;
+    usb_cdc_acm_descriptor acm;
+    usb_cdc_union_descriptor cdc_union;
+  } __attribute__((packed));
 
   static void SetConfigCallback(usbd_device* usbd_dev, uint16_t wValue);
   static void DataRxCallback(usbd_device* usbd_dev, uint8_t endpoint);
