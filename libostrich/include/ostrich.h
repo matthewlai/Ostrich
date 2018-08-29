@@ -29,6 +29,7 @@
 
 namespace Ostrich {
 
+// Current frequency settings
 extern uint32_t g_ahb_freq;
 extern uint32_t g_apb1_freq;
 extern uint32_t g_apb2_freq;
@@ -59,6 +60,36 @@ BoardConfig MakeBoardConfig();
 inline void WaitForInterrupt() {
   __asm__("wfi");
 }
+
+// Lock up the microcontroller in a spin loop for debugging. Called when
+// something is wrong.
+inline void LockUp() {
+  for (;;) {}
+}
+
+// Disables the specified IRQ on construction, and enables it on destruction.
+// If the IRQ wasn't enabled to begin with, both operations become no-op.
+class ScopedIRQLock {
+ public:
+  explicit ScopedIRQLock(uint8_t irq)
+      : irq_(irq), was_enabled_(nvic_get_irq_enabled(irq)) {
+    if (was_enabled_) {
+      nvic_disable_irq(irq);
+    }
+  }
+
+  ~ScopedIRQLock() {
+    if (was_enabled_) {
+      nvic_enable_irq(irq_);
+    }
+  }
+
+  ScopedIRQLock(const ScopedIRQLock&) = delete;
+  ScopedIRQLock& operator=(const ScopedIRQLock&) = delete;
+ private:
+  uint8_t irq_;
+  bool was_enabled_;
+};
 
 }; // namespace Ostrich
 

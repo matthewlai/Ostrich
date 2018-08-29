@@ -40,7 +40,7 @@ PREFIX		?= arm-none-eabi
 
 CC		:= $(PREFIX)-gcc
 CXX		:= $(PREFIX)-g++
-LD		:= $(PREFIX)-gcc
+LD		:= $(PREFIX)-g++
 AR		:= $(PREFIX)-ar
 AS		:= $(PREFIX)-as
 OBJCOPY		:= $(PREFIX)-objcopy
@@ -54,7 +54,6 @@ CXXSTD		?= -std=gnu++14
 ###############################################################################
 # Source files
 SRCS_BASE	:= $(basename $(SRCS))
-
 OBJS		:= $(SRCS_BASE:src/%=obj/%.o)
 
 INCLUDE 	+= $(OSTRICH_PATH)/libopencm3/include
@@ -113,7 +112,7 @@ TGT_CFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 TGT_CXXFLAGS	+= $(OPT) $(CXXSTD) -g
 TGT_CXXFLAGS	+= $(ARCH_FLAGS)
 TGT_CXXFLAGS	+= $(INCLUDES)
-TGT_CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls -Weffc++
+TGT_CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls
 TGT_CXXFLAGS	+= -fno-threadsafe-statics -fno-use-cxa-atexit
 TGT_CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 
@@ -127,12 +126,12 @@ TGT_CPPFLAGS	+= $(DEFS)
 ###############################################################################
 # Linker flags
 
-TGT_LDFLAGS		+= --static -nostartfiles --specs=nano.specs
+TGT_LDFLAGS		+= --static -nostartfiles --specs=nano.specs --specs=nosys.specs 
 TGT_LDFLAGS		+= -T$(LDSCRIPT)
 TGT_LDFLAGS		+= $(ARCH_FLAGS)
 TGT_LDFLAGS		+= -Wl,-Map=$(*).map
 TGT_LDFLAGS		+= -Wl,--gc-sections
-TGT_LDFLAGS		+= -Wl,--undefined=InitOstrich
+TGT_LDFLAGS		+= -Wl,--undefined=InitOstrich -Wl,--undefined=otg_fs_isr
 ifeq ($(V),99)
 TGT_LDFLAGS		+= -Wl,--print-gc-sections
 endif

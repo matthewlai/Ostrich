@@ -55,3 +55,6 @@ void Init() {
 void InitOstrich() {
   Ostrich::Init();
 }
+
+// This is needed to keep GCC happy when some C++ classes are used.
+void* __dso_handle;

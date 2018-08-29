@@ -21,7 +21,7 @@
 LIBRARY = ostrich
 
 # .c, .cpp, and .cxx files
-SRCS = $(wildcard src/*.c) $(wildcard src/*.cpp) $(wildcard src/*.cxx)
+SRCS = $(wildcard src/*.c) $(wildcard src/*.cpp) $(wildcard src/*.cxx) $(wildcard src/usb/*.cpp)
 
 # Directories containing header files
 INCLUDE = include

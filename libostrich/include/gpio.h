@@ -59,6 +59,18 @@ class GPIOManager : public NonCopyable {
   // the GPIO if necessary.
   void AllocatePins(uint32_t port, uint16_t pin);
 
+  void AllocatePin(GPIOPortPin portpin) {
+    AllocatePins(UnpackPort(portpin), UnpackPin(portpin));
+  }
+
+  void AllocateAFPin(GPIOPortPin portpin, uint32_t af, uint32_t pupd = GPIO_PUPD_NONE) {
+    AllocatePin(portpin);
+    auto port = UnpackPort(portpin);
+    auto pin = UnpackPin(portpin);
+    gpio_mode_setup(port, GPIO_MODE_AF, pupd, pin);
+    gpio_set_af(port, af, pin);
+  }
+
  private:
   GPIOManager();
 
@@ -90,6 +102,10 @@ class OutputPin : NonCopyable {
       gpio_clear(UnpackPort(kPortPin), UnpackPin(kPortPin));
     }
     return *this;
+  }
+
+  void Toggle() {
+    gpio_toggle(UnpackPort(kPortPin), UnpackPin(kPortPin));
   }
 };
 
