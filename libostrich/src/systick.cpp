@@ -56,10 +56,10 @@ uint64_t GetTimeClocks() {
       // Make sure reloads high hasn't changed.
     } while (num_reloads_high != g_systick_reloads_high);
 
-  	num_reloads = num_reloads_high;
+    num_reloads = num_reloads_high;
     num_reloads <<= 32;
     num_reloads |= num_reloads_low;
-  	systick_val = systick_get_value();
+    systick_val = systick_get_value();
 
     // If an interrupt did happen, we do everything all over again.
   } while (systick_get_countflag());
