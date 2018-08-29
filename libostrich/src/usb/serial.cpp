@@ -54,11 +54,12 @@ void otg_fs_isr() {
 
 namespace Ostrich {
 
-USBSerial::USBSerial()
+USBSerial::USBSerial(uint16_t vid, uint16_t pid, uint16_t current_ma,
+										 const char* manufacturer, const char* product)
 		: std::iostream(this),
 			usbd_dev_(nullptr),
-			dev_descriptor_(GetDeviceDescriptor(0x0111, 0x0222)),
-			config_descriptor_(GetConfigDescriptor(100)),
+			dev_descriptor_(GetDeviceDescriptor(vid, pid)),
+			config_descriptor_(GetConfigDescriptor(current_ma)),
 			cdc_functional_descriptors_(GetCDCFunctionalDescriptors()),
 			comm_interface_(GetCommInterface()),
 			data_interface_(GetDataInterface()),
@@ -74,8 +75,8 @@ USBSerial::USBSerial()
 
   desig_get_unique_id_as_dfu(unique_id_);
 
-  usb_strings_[0] = "Ostrich";
-  usb_strings_[1] = "CDC-ACM";
+  usb_strings_[0] = manufacturer;
+  usb_strings_[1] = product;
   usb_strings_[2] = unique_id_;
 
   usbd_dev_ = usbd_init(&otgfs_usb_driver, &dev_descriptor_, &config_descriptor_,

@@ -86,7 +86,10 @@ class CircularQueue {
 // "this" in our constructor, and that's the only thing we do with iostream here.
 class USBSerial : public std::streambuf, public std::iostream {
  public:
-  USBSerial();
+  // The default PIDs here are testing PIDs (http://pid.codes/1209/0001/).
+  // Make sure to change them before redistributing or selling any device!
+  USBSerial(uint16_t vid = 0x1209, uint16_t pid = 0x0001, uint16_t current_ma = 100,
+            const char* manufacturer = "Ostrich", const char* product = "CDC-ACM");
   ~USBSerial();
 
   USBSerial(const USBSerial&) = delete;
@@ -109,6 +112,11 @@ class USBSerial : public std::streambuf, public std::iostream {
     return receive_buffer_.Available();
   }
 
+  // Wait for the receive buffer to become non-empty.
+  void WaitForData() {
+    while (receive_buffer_.Empty()) {}
+  }
+
   // Non-blocking receive.
   std::size_t Receive(char* buf, std::size_t buf_size) {
     std::size_t to_read = std::min(buf_size, receive_buffer_.Available());
@@ -116,11 +124,6 @@ class USBSerial : public std::streambuf, public std::iostream {
       buf[i] = receive_buffer_.Pop();
     }
     return to_read;
-  }
-
-  // Wait for the receive buffer to become non-empty.
-  void WaitForData() {
-    while (receive_buffer_.Empty()) {}
   }
 
   void Poll() { usbd_poll(usbd_dev_); }
