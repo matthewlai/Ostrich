@@ -68,6 +68,8 @@ SingleConversionADC<kADC>::SingleConversionADC()
 
   // Set sampling time to min by default.
   adc_set_sample_time_on_all_channels(kADC, ADC_SMPR_SMP_3CYC);
+
+  adc_power_on(kADC);
 }
 
 template <uint32_t kADC>
@@ -134,8 +136,13 @@ void SingleConversionADC<kADC>::SetSamplingTime(
   for (const auto& option : kSamplingTimes) {
     if (cycle_time_ns * option.cycles >= sampling_time_ns) {
       adc_set_sample_time(kADC, channel, option.setting);
+      break;
     }
   }
+
+  // Set longest time if we got to the end (using higher sampling time would
+  // require changing ADCPre, which affects all ADCs).
+  adc_set_sample_time(kADC, channel, kSamplingTimes.back().setting);
 }
 
 template class SingleConversionADC<ADC1>;
