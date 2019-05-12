@@ -76,6 +76,16 @@ uint64_t GetTimeMicroseconds() {
   return GetTimeClocks() * 1000000 / g_ahb_freq;
 }
 
+void DelayMilliseconds(uint64_t milliseconds) {
+  uint64_t end = GetTimeMilliseconds() + milliseconds;
+  while (GetTimeMilliseconds() < end) {}
+}
+
+void DelayMicroseconds(uint64_t microseconds) {
+  uint64_t end = GetTimeMicroseconds() + microseconds;
+  while (GetTimeMicroseconds() < end) {}
+}
+
 }; // namespace Ostrich
 
 extern "C" {

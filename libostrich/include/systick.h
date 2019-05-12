@@ -29,6 +29,10 @@ uint64_t GetTimeClocks();
 uint64_t GetTimeMilliseconds();
 uint64_t GetTimeMicroseconds();
 
+// Busy waiting functions for short delays.
+void DelayMilliseconds(uint64_t milliseconds);
+void DelayMicroseconds(uint64_t microseconds);
+
 }; // namespace Ostrich
 
 #endif // __SYSTICK_H__
