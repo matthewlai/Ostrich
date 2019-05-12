@@ -35,7 +35,7 @@ extern uint32_t g_ahb_freq;
 extern uint32_t g_apb1_freq;
 extern uint32_t g_apb2_freq;
 extern uint32_t g_systick_period;
-extern uint32_t g_vdd_100mv;
+extern uint32_t g_vdd_mv;
 
 extern volatile uint32_t g_systick_reloads_high;
 extern volatile uint32_t g_systick_reloads_low;
@@ -60,7 +60,7 @@ struct BoardConfig {
 
   // Power supply voltage in 100mV increments. This is used to determine
   // settings that are voltage-dependent, eg. ADC clock pre-scaler.
-  uint32_t vdd_voltage_100mV;
+  uint32_t vdd_voltage_mV;
 };
 
 // This should be defined by the user.
@@ -100,11 +100,11 @@ class ScopedIRQLock {
   bool was_enabled_;
 };
 
-void HandleError(const std::string& msg) {
+inline void HandleError(const std::string& msg) {
   g_error_handler(msg);
 }
 
-void AssertTrue(bool cond, const std::string& msg) {
+inline void AssertTrue(bool cond, const std::string& msg) {
   if (!cond) {
     HandleError(msg);
   }

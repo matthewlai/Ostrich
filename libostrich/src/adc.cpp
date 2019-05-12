@@ -37,7 +37,7 @@ void ADCManager::SetADCPreDivider() {
   // Vdda 2.4 to 3.6V => 0.6 - 36 MHz
 
   uint64_t max_adc_clock = 18000000;
-  if (g_vdd_100mv > 24) {
+  if (g_vdd_mv > 2400) {
     max_adc_clock = 36000000;
   }
 
@@ -64,9 +64,7 @@ SingleConversionADC<kADC>::SingleConversionADC()
   adc_power_off(kADC);
   adc_disable_scan_mode(kADC);
   adc_set_single_conversion_mode(kADC);
-  adc_reset_calibration(kADC);
-  adc_calibration(kADC);
-  adc_enable_eoc_interrupt();
+  adc_enable_eoc_interrupt(kADC);
 
   // Set sampling time to min by default.
   adc_set_sample_time_on_all_channels(kADC, ADC_SMPR_SMP_3CYC);
@@ -86,14 +84,14 @@ void SingleConversionADC<kADC>::EnsureChannelSetup(int channel, bool is_vbatt) {
       adc_disable_vbat_sensor();
       adc_enable_temperature_sensor();
       vref_vsense_on_ = true;
-      vbatt_on = false;
+      vbatt_on_ = false;
 
       // 10us startup time.
       auto end_time = GetTimeMicroseconds() + 10;
       while (GetTimeMicroseconds() < end_time) {}
 
       // 10us sampling time.
-      adc_->SetSamplingTime(10000, kChannel);
+      SetSamplingTime(10000, channel);
     }
   } else if (ci.channel_type == ChannelType::kTempVbatt) {
     if (is_vbatt) {
@@ -101,28 +99,29 @@ void SingleConversionADC<kADC>::EnsureChannelSetup(int channel, bool is_vbatt) {
         adc_disable_temperature_sensor();
         adc_enable_vbat_sensor();
         vref_vsense_on_ = false;
-        vbatt_on = true;
+        vbatt_on_ = true;
 
         // 10us startup time.
         auto end_time = GetTimeMicroseconds() + 10;
         while (GetTimeMicroseconds() < end_time) {}
 
         // 10us sampling time.
-        adc_->SetSamplingTime(10000, kChannel);
+        SetSamplingTime(10000, channel);
       }
     } else {
       if (!vref_vsense_on_) {
-      adc_disable_vbat_sensor();
-      adc_enable_temperature_sensor();
-      vref_vsense_on_ = true;
-      vbatt_on = false;
+        adc_disable_vbat_sensor();
+        adc_enable_temperature_sensor();
+        vref_vsense_on_ = true;
+        vbatt_on_ = false;
 
-      // 10us startup time.
-      auto end_time = GetTimeMicroseconds() + 10;
-      while (GetTimeMicroseconds() < end_time) {}
+        // 10us startup time.
+        auto end_time = GetTimeMicroseconds() + 10;
+        while (GetTimeMicroseconds() < end_time) {}
 
-      // 10us sampling time.
-      adc_->SetSamplingTime(10000, kChannel);
+        // 10us sampling time.
+        SetSamplingTime(10000, channel);
+      }
     }
   }
 }

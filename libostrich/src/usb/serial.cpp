@@ -66,8 +66,7 @@ USBSerial::USBSerial(uint16_t vid, uint16_t pid, uint16_t current_ma,
       dtr_(false) {
 
   if (g_usb_serial != nullptr) {
-    // Only 1 USB serial interface can be constructed!
-    LockUp();
+    HandleError("Only one USB service can be instantiated at a time.");
   }
 
   GPIOManager::GetInstance().AllocateAFPin(GpioDef::PIN_A11, GPIO_AF10);
@@ -79,8 +78,9 @@ USBSerial::USBSerial(uint16_t vid, uint16_t pid, uint16_t current_ma,
   usb_strings_[1] = product;
   usb_strings_[2] = unique_id_;
 
-  usbd_dev_ = usbd_init(&otgfs_usb_driver, &dev_descriptor_, &config_descriptor_,
-                        usb_strings_, 3, control_buffer_, sizeof(control_buffer_));
+  usbd_dev_ = usbd_init(&otgfs_usb_driver, &dev_descriptor_,
+                        &config_descriptor_, usb_strings_, 3, control_buffer_,
+                        sizeof(control_buffer_));
 
   usbd_register_set_config_callback(usbd_dev_, SetConfigCallback);
 
@@ -100,11 +100,13 @@ void USBSerial::Send(const char* data, std::size_t length) {
   std::size_t length_written = 0;
   while (length_written < length) {
     std::size_t packet_size = std::min((length - length_written), 64u);
-    length_written += usbd_ep_write_packet(usbd_dev_, 0x82, data + length_written, packet_size);
+    length_written += usbd_ep_write_packet(usbd_dev_, 0x82,
+                                           data + length_written, packet_size);
   }
 }
 
-std::streamsize USBSerial::xsputn(const USBSerial::char_type* s, std::streamsize count) {
+std::streamsize USBSerial::xsputn(const USBSerial::char_type* s,
+                                  std::streamsize count) {
   Send(s, count);
   return count;
 }
@@ -131,16 +133,19 @@ USBSerial::int_type USBSerial::uflow() {
   return traits_type::to_int_type(receive_buffer_.Pop());
 }
 
-/*static*/ void USBSerial::SetConfigCallback(usbd_device* usbd_dev, uint16_t /*wValue*/) {
+/*static*/ void USBSerial::SetConfigCallback(usbd_device* usbd_dev,
+                                             uint16_t /*wValue*/) {
   usbd_ep_setup(usbd_dev, 0x01, USB_ENDPOINT_ATTR_BULK, 64, DataRxCallback);
   usbd_ep_setup(usbd_dev, 0x82, USB_ENDPOINT_ATTR_BULK, 64, nullptr);
   usbd_ep_setup(usbd_dev, 0x83, USB_ENDPOINT_ATTR_INTERRUPT, 16, nullptr);
-  usbd_register_control_callback(usbd_dev, USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+  usbd_register_control_callback(usbd_dev,
+                                 USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
                                  USB_REQ_TYPE_TYPE | USB_REQ_TYPE_RECIPIENT,
                                  ControlRequestCallback);
 }
 
-/*static*/ void USBSerial::DataRxCallback(usbd_device* usbd_dev, uint8_t /*endpoint*/) {
+/*static*/ void USBSerial::DataRxCallback(usbd_device* usbd_dev,
+                                          uint8_t /*endpoint*/) {
   char buf[64];
   std::size_t len = usbd_ep_read_packet(usbd_dev, 0x01, buf, 64);
 
@@ -154,7 +159,8 @@ USBSerial::int_type USBSerial::uflow() {
 }
 
 /*static*/ usbd_request_return_codes USBSerial::ControlRequestCallback(
-    usbd_device* /*usbd_dev*/, usb_setup_data* req, uint8_t** /*buf*/, uint16_t* len,
+    usbd_device* /*usbd_dev*/, usb_setup_data* req, uint8_t** /*buf*/,
+    uint16_t* len,
   void (**/*complete*/)(usbd_device* usbd_dev, usb_setup_data* req)) {
   switch (req->bRequest) {
     case USB_CDC_REQ_SET_CONTROL_LINE_STATE: {
@@ -173,7 +179,8 @@ USBSerial::int_type USBSerial::uflow() {
   return USBD_REQ_NOTSUPP;
 }
 
-usb_device_descriptor USBSerial::GetDeviceDescriptor(uint16_t vid, uint16_t pid) {
+usb_device_descriptor USBSerial::GetDeviceDescriptor(uint16_t vid,
+                                                     uint16_t pid) {
   usb_device_descriptor dev;
   ZeroInit(&dev);
   dev.bLength = USB_DT_DEVICE_SIZE;

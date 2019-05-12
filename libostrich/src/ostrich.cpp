@@ -29,10 +29,12 @@ uint32_t g_ahb_freq;
 uint32_t g_apb1_freq;
 uint32_t g_apb2_freq;
 uint32_t g_systick_period;
-uint32_t g_vdd_100mv;
+uint32_t g_vdd_mv;
 
 volatile uint32_t g_systick_reloads_high;
 volatile uint32_t g_systick_reloads_low;
+
+ErrorHandler g_error_handler;
 
 // Default error handler locks up the system.
 ErrorHandler error_handler = [](const std::string&) { LockUp(); };
@@ -52,7 +54,7 @@ void Init() {
 
   g_systick_period = board_config.systick_period_clocks;
 
-  g_vdd_100mv = board_config.vdd_voltage_100mV;
+  g_vdd_mv = board_config.vdd_voltage_mV;
 
   InitSystick();
 }

@@ -92,6 +92,8 @@ class ADCManager : public NonCopyable {
 
   uint64_t ADCClock() const { return adc_clock_; }
 
+  void SetADCPreDivider();
+
  private:
   ADCManager();
 
@@ -135,7 +137,7 @@ class SingleConversionADC : public ADCBase<kADC> {
     uint16_t ReadU16() { return adc_->ReadChannel<kChannel>(); }
 
     float ReadNormalized() {
-      return static_cast<float>(adc_->ReadChannel()) / 4096;
+      return static_cast<float>(adc_->ReadChannel<kChannel>()) / 4096;
     }
 
    private:
@@ -143,13 +145,13 @@ class SingleConversionADC : public ADCBase<kADC> {
   };
 
   template <uint8_t kChannel>
-  ChannelSampler<kChannel> GetGPIOInput() const {
+  ChannelSampler<kChannel> GetGPIOInput() {
     return ChannelSampler<kChannel>(this, /*is_vbatt=*/false);
   }
 
  private:
   void EnsureChannelSetup(int channel, bool is_vbatt);
-  void SetSamplingTime(uint64_t sampling_time_ns);
+  void SetSamplingTime(uint32_t channel, uint64_t sampling_time_ns);
 
   template <uint8_t kChannel>
   uint16_t ReadChannel() {
