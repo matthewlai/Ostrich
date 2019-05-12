@@ -126,7 +126,7 @@ TGT_CPPFLAGS	+= $(DEFS)
 ###############################################################################
 # Linker flags
 
-TGT_LDFLAGS		+= --static -nostartfiles --specs=nano.specs --specs=nosys.specs 
+TGT_LDFLAGS		+= --static -nostartfiles --specs=nano.specs --specs=nosys.specs -u _printf_float
 TGT_LDFLAGS		+= -T$(LDSCRIPT)
 TGT_LDFLAGS		+= $(ARCH_FLAGS)
 TGT_LDFLAGS		+= -Wl,-Map=$(*).map
