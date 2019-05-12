@@ -1,6 +1,6 @@
 EESchema Schematic File Version 4
 LIBS:ostrich-cache
-EELAYER 26 0
+EELAYER 29 0
 EELAYER END
 $Descr User 21654 11811
 encoding utf-8
@@ -15,7 +15,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L power:GND #PWR017
+L ostrich-rescue:GND-power #PWR017
 U 1 1 58961E93
 P 7150 10750
 F 0 "#PWR017" H 7150 10500 50  0001 C CNN
@@ -47,7 +47,7 @@ F 5 "Switch is not the same as footprint, but cheaper and compatible." H 2600 15
 	0    1    1    0   
 $EndComp
 $Comp
-L power:+3V3 #PWR012
+L ostrich-rescue:+3V3-power #PWR012
 U 1 1 58963FE0
 P 2600 1250
 F 0 "#PWR012" H 2600 1100 50  0001 C CNN
@@ -58,7 +58,7 @@ F 3 "" H 2600 1250 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR014
+L ostrich-rescue:GND-power #PWR014
 U 1 1 589640C2
 P 3300 2300
 F 0 "#PWR014" H 3300 2050 50  0001 C CNN
@@ -69,7 +69,7 @@ F 3 "" H 3300 2300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C1
+L ostrich-rescue:C-device C1
 U 1 1 5896414E
 P 3050 2100
 F 0 "C1" H 3075 2200 50  0000 L CNN
@@ -80,7 +80,7 @@ F 3 "" H 3050 2100 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR013
+L ostrich-rescue:GND-power #PWR013
 U 1 1 589641CA
 P 3050 2300
 F 0 "#PWR013" H 3050 2050 50  0001 C CNN
@@ -91,7 +91,7 @@ F 3 "" H 3050 2300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:R R3
+L ostrich-rescue:R-device R3
 U 1 1 5896427B
 P 3300 2100
 F 0 "R3" V 3380 2100 50  0000 C CNN
@@ -104,7 +104,7 @@ $EndComp
 Text Notes 2750 1750 0    60   ~ 0
 Time Constant = 1s
 $Comp
-L power:GND #PWR05
+L ostrich-rescue:GND-power #PWR05
 U 1 1 5896452F
 P 2150 2300
 F 0 "#PWR05" H 2150 2050 50  0001 C CNN
@@ -117,7 +117,7 @@ $EndComp
 Text Label 1300 1650 2    60   ~ 0
 NRST
 $Comp
-L device:D_Schottky D1
+L ostrich-rescue:D_Schottky-device D1
 U 1 1 58964FBE
 P 2800 1900
 F 0 "D1" H 2800 2000 50  0000 C CNN
@@ -129,7 +129,7 @@ F 4 "ACDBN140-HF" H 2800 1900 60  0001 C CNN "Field4"
 	-1   0    0    1   
 $EndComp
 $Comp
-L device:R R2
+L ostrich-rescue:R-device R2
 U 1 1 58964B59
 P 2500 2100
 F 0 "R2" V 2580 2100 50  0000 C CNN
@@ -140,7 +140,7 @@ F 3 "" H 2500 2100 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L power:GND #PWR08
+L ostrich-rescue:GND-power #PWR08
 U 1 1 5896732B
 P 2500 2300
 F 0 "#PWR08" H 2500 2050 50  0001 C CNN
@@ -163,7 +163,7 @@ F 4 "PTS645SM43SMTR92" H 1750 2050 60  0001 C CNN "Field4"
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR03
+L ostrich-rescue:GND-power #PWR03
 U 1 1 58967596
 P 1750 2300
 F 0 "#PWR03" H 1750 2050 50  0001 C CNN
@@ -174,7 +174,7 @@ F 3 "" H 1750 2300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR09
+L ostrich-rescue:+3V3-power #PWR09
 U 1 1 58968033
 P 2500 3500
 F 0 "#PWR09" H 2500 3350 50  0001 C CNN
@@ -185,7 +185,7 @@ F 3 "" H 2500 3500 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L power:+3V3 #PWR010
+L ostrich-rescue:+3V3-power #PWR010
 U 1 1 589680CE
 P 2500 3900
 F 0 "#PWR010" H 2500 3750 50  0001 C CNN
@@ -196,7 +196,7 @@ F 3 "" H 2500 3900 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L power:+3V3 #PWR011
+L ostrich-rescue:+3V3-power #PWR011
 U 1 1 58968150
 P 2500 4000
 F 0 "#PWR011" H 2500 3850 50  0001 C CNN
@@ -207,7 +207,7 @@ F 3 "" H 2500 4000 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L device:C C4
+L ostrich-rescue:C-device C4
 U 1 1 589681C2
 P 2150 4250
 F 0 "C4" H 2175 4350 50  0000 L CNN
@@ -218,7 +218,7 @@ F 3 "" H 2150 4250 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C5
+L ostrich-rescue:C-device C5
 U 1 1 58968281
 P 2450 4350
 F 0 "C5" H 2475 4450 50  0000 L CNN
@@ -229,7 +229,7 @@ F 3 "" H 2450 4350 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR07
+L ostrich-rescue:GND-power #PWR07
 U 1 1 58968326
 P 2450 4550
 F 0 "#PWR07" H 2450 4300 50  0001 C CNN
@@ -240,7 +240,7 @@ F 3 "" H 2450 4550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR06
+L ostrich-rescue:GND-power #PWR06
 U 1 1 58968365
 P 2150 4550
 F 0 "#PWR06" H 2150 4300 50  0001 C CNN
@@ -251,7 +251,7 @@ F 3 "" H 2150 4550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:Crystal_Small Y1
+L ostrich-rescue:Crystal_Small-device Y1
 U 1 1 58968578
 P 1600 4900
 F 0 "Y1" H 1400 4900 50  0000 C CNN
@@ -263,7 +263,7 @@ F 4 "ABM3-12.000MHZ-D2Y-T" H 1600 4900 60  0001 C CNN "Field4"
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C3
+L ostrich-rescue:C-device C3
 U 1 1 5896874E
 P 1750 5100
 F 0 "C3" H 1775 5200 50  0000 L CNN
@@ -275,7 +275,7 @@ F 4 "08051A160JAT2A" H 1750 5100 60  0001 C CNN "Field4"
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C2
+L ostrich-rescue:C-device C2
 U 1 1 5896883C
 P 1350 5050
 F 0 "C2" H 1375 5150 50  0000 L CNN
@@ -287,7 +287,7 @@ F 4 "08051A160JAT2A" H 1350 5050 60  0001 C CNN "Field4"
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR04
+L ostrich-rescue:GND-power #PWR04
 U 1 1 58968942
 P 1750 5300
 F 0 "#PWR04" H 1750 5050 50  0001 C CNN
@@ -298,7 +298,7 @@ F 3 "" H 1750 5300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR01
+L ostrich-rescue:GND-power #PWR01
 U 1 1 58968977
 P 1350 5300
 F 0 "#PWR01" H 1350 5050 50  0001 C CNN
@@ -320,7 +320,7 @@ F 3 "" V 6000 1450 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR015
+L ostrich-rescue:GND-power #PWR015
 U 1 1 58969365
 P 5650 1850
 F 0 "#PWR015" H 5650 1600 50  0001 C CNN
@@ -335,7 +335,7 @@ USB_DM
 Text Label 5450 1550 2    60   ~ 0
 USB_DP
 $Comp
-L power:GND #PWR016
+L ostrich-rescue:GND-power #PWR016
 U 1 1 58969850
 P 6150 2000
 F 0 "#PWR016" H 6150 1750 50  0001 C CNN
@@ -350,7 +350,7 @@ USB_DM
 Text Label 12050 4600 0    60   ~ 0
 USB_DP
 $Comp
-L device:D_Schottky D2
+L ostrich-rescue:D_Schottky-device D2
 U 1 1 58969C43
 P 7750 1350
 F 0 "D2" H 7750 1450 50  0000 C CNN
@@ -362,7 +362,7 @@ F 4 "ACDBN140-HF" H 7750 1350 60  0001 C CNN "Field4"
 	-1   0    0    1   
 $EndComp
 $Comp
-L power:+3V3 #PWR023
+L ostrich-rescue:+3V3-power #PWR023
 U 1 1 5896A023
 P 9300 1350
 F 0 "#PWR023" H 9300 1200 50  0001 C CNN
@@ -373,7 +373,7 @@ F 3 "" H 9300 1350 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR021
+L ostrich-rescue:GND-power #PWR021
 U 1 1 5896A21E
 P 8700 1750
 F 0 "#PWR021" H 8700 1500 50  0001 C CNN
@@ -384,7 +384,7 @@ F 3 "" H 8700 1750 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C7
+L ostrich-rescue:C-device C7
 U 1 1 5896A2C2
 P 9200 1550
 F 0 "C7" H 9225 1650 50  0000 L CNN
@@ -395,7 +395,7 @@ F 3 "" H 9200 1550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR022
+L ostrich-rescue:GND-power #PWR022
 U 1 1 5896A345
 P 9200 1750
 F 0 "#PWR022" H 9200 1500 50  0001 C CNN
@@ -406,7 +406,7 @@ F 3 "" H 9200 1750 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C6
+L ostrich-rescue:C-device C6
 U 1 1 5896A4F5
 P 8200 1550
 F 0 "C6" H 8225 1650 50  0000 L CNN
@@ -417,7 +417,7 @@ F 3 "" H 8200 1550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR020
+L ostrich-rescue:GND-power #PWR020
 U 1 1 5896A5DB
 P 8200 1750
 F 0 "#PWR020" H 8200 1500 50  0001 C CNN
@@ -441,7 +441,7 @@ $EndComp
 Text Notes 14400 1250 0    60   ~ 0
 BuyDisplay LCD, 8080 16-bit parallel (mirrored)\n+ Capacitive touch
 $Comp
-L power:GND #PWR045
+L ostrich-rescue:GND-power #PWR045
 U 1 1 5896ACFD
 P 14950 1400
 F 0 "#PWR045" H 14950 1150 50  0001 C CNN
@@ -452,7 +452,7 @@ F 3 "" H 14950 1400 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:GND #PWR047
+L ostrich-rescue:GND-power #PWR047
 U 1 1 5896AE06
 P 14950 5300
 F 0 "#PWR047" H 14950 5050 50  0001 C CNN
@@ -463,7 +463,7 @@ F 3 "" H 14950 5300 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L power:+3V3 #PWR041
+L ostrich-rescue:+3V3-power #PWR041
 U 1 1 5896B08B
 P 14600 1500
 F 0 "#PWR041" H 14600 1350 50  0001 C CNN
@@ -533,7 +533,7 @@ TOUCH_INT
 Text Label 15050 5000 2    60   ~ 0
 TOUCH_WAKE
 $Comp
-L power:GND #PWR046
+L ostrich-rescue:GND-power #PWR046
 U 1 1 5896CFFB
 P 14950 5100
 F 0 "#PWR046" H 14950 4850 50  0001 C CNN
@@ -594,7 +594,7 @@ TOUCH_SCL
 Text Label 13300 6200 0    60   ~ 0
 TOUCH_SDA
 $Comp
-L device:R R4
+L ostrich-rescue:R-device R4
 U 1 1 58971117
 P 12800 5400
 F 0 "R4" V 12880 5400 50  0000 C CNN
@@ -605,7 +605,7 @@ F 3 "" H 12800 5400 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:R R5
+L ostrich-rescue:R-device R5
 U 1 1 58971217
 P 13050 5400
 F 0 "R5" V 13130 5400 50  0000 C CNN
@@ -616,7 +616,7 @@ F 3 "" H 13050 5400 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR027
+L ostrich-rescue:+3V3-power #PWR027
 U 1 1 589715F8
 P 12800 5200
 F 0 "#PWR027" H 12800 5050 50  0001 C CNN
@@ -627,7 +627,7 @@ F 3 "" H 12800 5200 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR029
+L ostrich-rescue:+3V3-power #PWR029
 U 1 1 58971671
 P 13050 5200
 F 0 "#PWR029" H 13050 5050 50  0001 C CNN
@@ -644,7 +644,7 @@ TOUCH_WAKE
 Text Label 13300 6500 0    60   ~ 0
 TOUCH_RESET
 $Comp
-L device:Q_NMOS_GSD Q1
+L ostrich-rescue:Q_NMOS_GSD-device Q1
 U 1 1 589731EA
 P 2250 1900
 F 0 "Q1" H 2450 1950 50  0000 L CNN
@@ -666,7 +666,7 @@ F 3 "" H 18600 2300 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR056
+L ostrich-rescue:GND-power #PWR056
 U 1 1 58975471
 P 18150 4050
 F 0 "#PWR056" H 18150 3800 50  0001 C CNN
@@ -677,7 +677,7 @@ F 3 "" H 18150 4050 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR055
+L ostrich-rescue:+3V3-power #PWR055
 U 1 1 58975CA9
 P 18150 2250
 F 0 "#PWR055" H 18150 2100 50  0001 C CNN
@@ -792,7 +792,7 @@ A11
 Text Label 2500 5300 2    60   ~ 0
 A12
 $Comp
-L power:GND #PWR025
+L ostrich-rescue:GND-power #PWR025
 U 1 1 5897D2FD
 P 10350 2450
 F 0 "#PWR025" H 10350 2200 50  0001 C CNN
@@ -803,7 +803,7 @@ F 3 "" H 10350 2450 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR024
+L ostrich-rescue:+3V3-power #PWR024
 U 1 1 5897D34A
 P 10350 1850
 F 0 "#PWR024" H 10350 1700 50  0001 C CNN
@@ -814,7 +814,7 @@ F 3 "" H 10350 1850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C8
+L ostrich-rescue:C-device C8
 U 1 1 5897D407
 P 10350 2150
 F 0 "C8" H 10375 2250 50  0000 L CNN
@@ -825,7 +825,7 @@ F 3 "" H 10350 2150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C9
+L ostrich-rescue:C-device C9
 U 1 1 5897DBCD
 P 10700 2150
 F 0 "C9" H 10725 2250 50  0000 L CNN
@@ -836,7 +836,7 @@ F 3 "" H 10700 2150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C10
+L ostrich-rescue:C-device C10
 U 1 1 5897DC3B
 P 11050 2150
 F 0 "C10" H 11075 2250 50  0000 L CNN
@@ -847,7 +847,7 @@ F 3 "" H 11050 2150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C11
+L ostrich-rescue:C-device C11
 U 1 1 5897DCA4
 P 11400 2150
 F 0 "C11" H 11425 2250 50  0000 L CNN
@@ -858,7 +858,7 @@ F 3 "" H 11400 2150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C12
+L ostrich-rescue:C-device C12
 U 1 1 5897EAA6
 P 11800 2150
 F 0 "C12" H 11825 2250 50  0000 L CNN
@@ -869,7 +869,7 @@ F 3 "" H 11800 2150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR058
+L ostrich-rescue:GND-power #PWR058
 U 1 1 5898017B
 P 18850 1850
 F 0 "#PWR058" H 18850 1600 50  0001 C CNN
@@ -880,7 +880,7 @@ F 3 "" H 18850 1850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR057
+L ostrich-rescue:+3V3-power #PWR057
 U 1 1 58980181
 P 18850 1250
 F 0 "#PWR057" H 18850 1100 50  0001 C CNN
@@ -891,7 +891,7 @@ F 3 "" H 18850 1250 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C14
+L ostrich-rescue:C-device C14
 U 1 1 5898018F
 P 18850 1550
 F 0 "C14" H 18875 1650 50  0000 L CNN
@@ -902,7 +902,7 @@ F 3 "" H 18850 1550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L device:C C15
+L ostrich-rescue:C-device C15
 U 1 1 589804B0
 P 19200 1550
 F 0 "C15" H 19225 1650 50  0000 L CNN
@@ -936,7 +936,7 @@ NoConn ~ 11850 8100
 NoConn ~ 11850 8200
 NoConn ~ 11850 8300
 $Comp
-L device:C C13
+L ostrich-rescue:C-device C13
 U 1 1 58A2576D
 P 1450 2050
 F 0 "C13" H 1475 2150 50  0000 L CNN
@@ -947,7 +947,7 @@ F 3 "" H 1450 2050 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR02
+L ostrich-rescue:GND-power #PWR02
 U 1 1 58A25EBE
 P 1450 2300
 F 0 "#PWR02" H 1450 2050 50  0001 C CNN
@@ -985,7 +985,7 @@ Text Notes 14950 5950 0    60   ~ 0
 Power
 NoConn ~ 14900 6100
 $Comp
-L power:+3V3 #PWR042
+L ostrich-rescue:+3V3-power #PWR042
 U 1 1 58A3B6ED
 P 14700 6200
 F 0 "#PWR042" H 14700 6050 50  0001 C CNN
@@ -998,7 +998,7 @@ $EndComp
 Text Label 14700 6300 2    60   ~ 0
 NRST
 $Comp
-L power:+3V3 #PWR039
+L ostrich-rescue:+3V3-power #PWR039
 U 1 1 58A3BCFD
 P 14300 6400
 F 0 "#PWR039" H 14300 6250 50  0001 C CNN
@@ -1009,7 +1009,7 @@ F 3 "" H 14300 6400 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR040
+L ostrich-rescue:GND-power #PWR040
 U 1 1 58A3C180
 P 14450 6800
 F 0 "#PWR040" H 14450 6550 50  0001 C CNN
@@ -1024,7 +1024,7 @@ Vusb
 Text Label 7500 1350 2    60   ~ 0
 Vusb
 $Comp
-L power:VCC #PWR019
+L ostrich-rescue:VCC-power #PWR019
 U 1 1 58A3F24B
 P 8100 1300
 F 0 "#PWR019" H 8100 1150 50  0001 C CNN
@@ -1035,7 +1035,7 @@ F 3 "" H 8100 1300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR044
+L ostrich-rescue:VCC-power #PWR044
 U 1 1 58A3FBE8
 P 14700 6800
 F 0 "#PWR044" H 14700 6650 50  0001 C CNN
@@ -1046,7 +1046,7 @@ F 3 "" H 14700 6800 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L power:VCC #PWR043
+L ostrich-rescue:VCC-power #PWR043
 U 1 1 58A400CA
 P 14700 6500
 F 0 "#PWR043" H 14700 6350 50  0001 C CNN
@@ -1102,10 +1102,8 @@ F 3 "" H 16500 7650 50  0001 C CNN
 	1    16500 7650
 	1    0    0    -1  
 $EndComp
-Text Label 16100 8000 2    60   ~ 0
-PA10
 Text Label 16100 7900 2    60   ~ 0
-PA9
+PA10
 Text Label 16100 7800 2    60   ~ 0
 PD11
 Text Label 16100 7700 2    60   ~ 0
@@ -1148,7 +1146,7 @@ Text Label 16100 5900 2    60   ~ 0
 PA8
 NoConn ~ 16300 6100
 $Comp
-L power:GND #PWR048
+L ostrich-rescue:GND-power #PWR048
 U 1 1 58A55075
 P 15700 6250
 F 0 "#PWR048" H 15700 6000 50  0001 C CNN
@@ -1202,7 +1200,7 @@ PC9
 Text Label 17450 5900 2    60   ~ 0
 PA8
 $Comp
-L power:GND #PWR054
+L ostrich-rescue:GND-power #PWR054
 U 1 1 58A5728A
 P 17050 6250
 F 0 "#PWR054" H 17050 6000 50  0001 C CNN
@@ -1225,7 +1223,7 @@ F 3 "" H 8700 1400 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR036
+L ostrich-rescue:GND-power #PWR036
 U 1 1 58A8FC60
 P 13700 9800
 F 0 "#PWR036" H 13700 9550 50  0001 C CNN
@@ -1236,7 +1234,7 @@ F 3 "" H 13700 9800 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR018
+L ostrich-rescue:+3V3-power #PWR018
 U 1 1 58967A1B
 P 7250 2700
 F 0 "#PWR018" H 7250 2550 50  0001 C CNN
@@ -1269,7 +1267,7 @@ F 3 "" H 17200 8900 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR052
+L ostrich-rescue:+3V3-power #PWR052
 U 1 1 58AE4289
 P 17000 8950
 F 0 "#PWR052" H 17000 8800 50  0001 C CNN
@@ -1280,7 +1278,7 @@ F 3 "" H 17000 8950 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR053
+L ostrich-rescue:GND-power #PWR053
 U 1 1 58AE44D9
 P 17000 9150
 F 0 "#PWR053" H 17000 8900 50  0001 C CNN
@@ -1304,8 +1302,6 @@ Text Label 12050 4400 0    60   ~ 0
 PA10
 Text Label 16950 9500 2    60   ~ 0
 ESP_RST
-Wire Wire Line
-	12050 4300 11850 4300
 Wire Wire Line
 	12050 4400 11850 4400
 Wire Wire Line
@@ -2002,7 +1998,7 @@ Wire Wire Line
 Wire Wire Line
 	2450 6100 2650 6100
 $Comp
-L power:+3V3 #PWR035
+L ostrich-rescue:+3V3-power #PWR035
 U 1 1 58AE999B
 P 13700 9350
 F 0 "#PWR035" H 13700 9200 50  0001 C CNN
@@ -2062,7 +2058,7 @@ F 3 "" H 15200 9400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR038
+L ostrich-rescue:GND-power #PWR038
 U 1 1 58AECA8E
 P 14200 10050
 F 0 "#PWR038" H 14200 9800 50  0001 C CNN
@@ -2077,7 +2073,7 @@ Wire Wire Line
 Wire Wire Line
 	14200 9950 14300 9950
 $Comp
-L device:R R1
+L ostrich-rescue:R-device R1
 U 1 1 58AECDAF
 P 14200 8700
 F 0 "R1" V 14280 8700 50  0000 C CNN
@@ -2092,7 +2088,7 @@ Wire Wire Line
 Wire Wire Line
 	14150 8950 14200 8950
 $Comp
-L power:+3V3 #PWR037
+L ostrich-rescue:+3V3-power #PWR037
 U 1 1 58AED525
 P 14200 8450
 F 0 "#PWR037" H 14200 8300 50  0001 C CNN
@@ -2105,7 +2101,7 @@ $EndComp
 Wire Wire Line
 	14200 8450 14200 8550
 $Comp
-L power:GND #PWR050
+L ostrich-rescue:GND-power #PWR050
 U 1 1 58AEE47D
 P 16100 10100
 F 0 "#PWR050" H 16100 9850 50  0001 C CNN
@@ -2120,7 +2116,7 @@ Wire Wire Line
 Wire Wire Line
 	16100 10000 16000 10000
 $Comp
-L device:R R6
+L ostrich-rescue:R-device R6
 U 1 1 58AEEF13
 P 13550 9450
 F 0 "R6" V 13630 9450 50  0000 C CNN
@@ -2131,7 +2127,7 @@ F 3 "" H 13550 9450 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR032
+L ostrich-rescue:+3V3-power #PWR032
 U 1 1 58AEEFCE
 P 13550 9250
 F 0 "#PWR032" H 13550 9100 50  0001 C CNN
@@ -2147,7 +2143,7 @@ Wire Wire Line
 	13550 9700 13550 9600
 Connection ~ 13550 9700
 $Comp
-L device:C C16
+L ostrich-rescue:C-device C16
 U 1 1 58AEFD31
 P 13700 8700
 F 0 "C16" H 13725 8800 50  0000 L CNN
@@ -2158,7 +2154,7 @@ F 3 "" H 13700 8700 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR033
+L ostrich-rescue:+3V3-power #PWR033
 U 1 1 58AF00AD
 P 13700 8450
 F 0 "#PWR033" H 13700 8300 50  0001 C CNN
@@ -2171,7 +2167,7 @@ $EndComp
 Wire Wire Line
 	13700 8450 13700 8550
 $Comp
-L power:GND #PWR034
+L ostrich-rescue:GND-power #PWR034
 U 1 1 58AF0309
 P 13700 8900
 F 0 "#PWR034" H 13700 8650 50  0001 C CNN
@@ -2184,7 +2180,7 @@ $EndComp
 Wire Wire Line
 	13700 8900 13700 8850
 $Comp
-L device:LED D3
+L ostrich-rescue:LED-device D3
 U 1 1 58AF1188
 P 12600 1250
 F 0 "D3" H 12600 1350 50  0000 C CNN
@@ -2195,7 +2191,7 @@ F 3 "" H 12600 1250 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L device:R R7
+L ostrich-rescue:R-device R7
 U 1 1 58AF156C
 P 12600 1650
 F 0 "R7" V 12680 1650 50  0000 C CNN
@@ -2206,7 +2202,7 @@ F 3 "" H 12600 1650 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L device:R R8
+L ostrich-rescue:R-device R8
 U 1 1 58AF1974
 P 12900 1650
 F 0 "R8" V 12980 1650 50  0000 C CNN
@@ -2217,7 +2213,7 @@ F 3 "" H 12900 1650 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L device:R R9
+L ostrich-rescue:R-device R9
 U 1 1 58AF1A16
 P 13200 1650
 F 0 "R9" V 13280 1650 50  0000 C CNN
@@ -2228,7 +2224,7 @@ F 3 "" H 13200 1650 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L device:R R10
+L ostrich-rescue:R-device R10
 U 1 1 58AF1ACF
 P 13500 1650
 F 0 "R10" V 13580 1650 50  0000 C CNN
@@ -2239,7 +2235,7 @@ F 3 "" H 13500 1650 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L power:+3V3 #PWR026
+L ostrich-rescue:+3V3-power #PWR026
 U 1 1 58AF1F58
 P 12600 950
 F 0 "#PWR026" H 12600 800 50  0001 C CNN
@@ -2252,7 +2248,7 @@ $EndComp
 Wire Wire Line
 	12600 950  12600 1100
 $Comp
-L power:+3V3 #PWR028
+L ostrich-rescue:+3V3-power #PWR028
 U 1 1 58AF21AD
 P 12900 950
 F 0 "#PWR028" H 12900 800 50  0001 C CNN
@@ -2263,7 +2259,7 @@ F 3 "" H 12900 950 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR030
+L ostrich-rescue:+3V3-power #PWR030
 U 1 1 58AF2248
 P 13200 950
 F 0 "#PWR030" H 13200 800 50  0001 C CNN
@@ -2274,7 +2270,7 @@ F 3 "" H 13200 950 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:+3V3 #PWR031
+L ostrich-rescue:+3V3-power #PWR031
 U 1 1 58AF22E3
 P 13500 950
 F 0 "#PWR031" H 13500 800 50  0001 C CNN
@@ -2331,7 +2327,7 @@ Wire Wire Line
 Wire Wire Line
 	13500 1950 13500 1800
 $Comp
-L device:LED D4
+L ostrich-rescue:LED-device D4
 U 1 1 58AF4CDB
 P 12900 1250
 F 0 "D4" H 12900 1350 50  0000 C CNN
@@ -2342,7 +2338,7 @@ F 3 "" H 12900 1250 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L device:LED D5
+L ostrich-rescue:LED-device D5
 U 1 1 58AF4D81
 P 13200 1250
 F 0 "D5" H 13200 1350 50  0000 C CNN
@@ -2353,7 +2349,7 @@ F 3 "" H 13200 1250 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L device:LED D6
+L ostrich-rescue:LED-device D6
 U 1 1 58AF4E26
 P 13500 1250
 F 0 "D6" H 13500 1350 50  0000 C CNN
@@ -2377,7 +2373,7 @@ $EndComp
 Text Notes 18500 5750 0    60   ~ 0
 Bottom. Can only be used if LCD isn't used.
 $Comp
-L power:+3V3 #PWR061
+L ostrich-rescue:+3V3-power #PWR061
 U 1 1 58AF85C3
 P 20150 6000
 F 0 "#PWR061" H 20150 5850 50  0001 C CNN
@@ -2390,7 +2386,7 @@ $EndComp
 Wire Wire Line
 	20150 6000 20250 6000
 $Comp
-L power:GND #PWR059
+L ostrich-rescue:GND-power #PWR059
 U 1 1 58AF885E
 P 19950 6100
 F 0 "#PWR059" H 19950 5850 50  0001 C CNN
@@ -2403,7 +2399,7 @@ $EndComp
 Wire Wire Line
 	19950 6100 20250 6100
 $Comp
-L power:+3V3 #PWR062
+L ostrich-rescue:+3V3-power #PWR062
 U 1 1 58AF8AC8
 P 20150 7100
 F 0 "#PWR062" H 20150 6950 50  0001 C CNN
@@ -2416,7 +2412,7 @@ $EndComp
 Wire Wire Line
 	20150 7100 20250 7100
 $Comp
-L power:GND #PWR060
+L ostrich-rescue:GND-power #PWR060
 U 1 1 58AF8D33
 P 19950 7200
 F 0 "#PWR060" H 19950 6950 50  0001 C CNN
@@ -2491,7 +2487,7 @@ $EndComp
 Text Notes 16650 2700 0    60   ~ 0
 SWD debug
 $Comp
-L power:+3V3 #PWR051
+L ostrich-rescue:+3V3-power #PWR051
 U 1 1 58B102CF
 P 16550 2750
 F 0 "#PWR051" H 16550 2600 50  0001 C CNN
@@ -2510,7 +2506,7 @@ SWCLK
 Wire Wire Line
 	16550 2950 16700 2950
 $Comp
-L power:GND #PWR049
+L ostrich-rescue:GND-power #PWR049
 U 1 1 58B108ED
 P 16100 3200
 F 0 "#PWR049" H 16100 2950 50  0001 C CNN
@@ -2702,4 +2698,25 @@ Wire Wire Line
 	13550 9700 14300 9700
 Wire Wire Line
 	14200 8950 14300 8950
+Wire Wire Line
+	11850 4300 12750 4300
+Text Label 12750 4100 2    60   ~ 0
+Vusb
+Wire Wire Line
+	12750 4100 12750 4300
+Text Label 12050 4100 0    60   ~ 0
+PA7
+Wire Wire Line
+	12050 4100 11850 4100
+$Comp
+L ostrich-rescue:GND-power #PWR?
+U 1 1 5CF53B47
+P 16100 8000
+F 0 "#PWR?" H 16100 7750 50  0001 C CNN
+F 1 "GND" H 16100 7850 50  0000 C CNN
+F 2 "" H 16100 8000 50  0000 C CNN
+F 3 "" H 16100 8000 50  0000 C CNN
+	1    16100 8000
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
