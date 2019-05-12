@@ -38,6 +38,9 @@ namespace Ostrich {
 constexpr int kNumADCs = 3;
 constexpr int kNumChannels = 19;
 constexpr int kADCFullScale = 4096;  // Only supporting 12-bit for now.
+constexpr int kTemperatureChannel = 18;
+constexpr int kVrefintChannel = 17;
+constexpr float kVrefintVoltage = 1.21f;
 
 struct ADCInfo {
   uint32_t adc_base;
@@ -137,16 +140,41 @@ class SingleConversionADC : public ADCBase<kADC> {
     uint16_t ReadU16() { return adc_->ReadChannel<kChannel>(); }
 
     float ReadNormalized() {
-      return static_cast<float>(adc_->ReadChannel<kChannel>()) / 4096;
+      return static_cast<float>(ReadU16()) / kADCFullScale;
     }
 
-   private:
+   protected:
     SingleConversionADC* adc_;
+  };
+
+  class TemperatureSampler : public ChannelSampler<kTemperatureChannel> {
+   public:
+    TemperatureSampler(SingleConversionADC* adc)
+        : ChannelSampler<kTemperatureChannel>(adc, false) {
+      // Make sure we can read VrefInt as well. At this point we know we have
+      // temperature + Vref selected because they share the same enable bit.
+      this->adc_->EnsureChannelSetup(kVrefintChannel, false);
+    }
+
+    float ReadTempC() {
+      // Compute temperature as per RM00410, using Vrefint as reference.
+      float lsb_volts =
+          kVrefintVoltage / this->adc_->template ReadChannel<kVrefintChannel>();
+      float vsense = this->ReadU16() * lsb_volts;
+      return (vsense - 0.76f) / 0.0025f + 25.0f;
+    }
   };
 
   template <uint8_t kChannel>
   ChannelSampler<kChannel> GetGPIOInput() {
     return ChannelSampler<kChannel>(this, /*is_vbatt=*/false);
+  }
+
+  TemperatureSampler GetTemperatureInput() {
+    if (kADC != ADC1) {
+      HandleError("Temperature only available on ADC1");
+    }
+    return TemperatureSampler(this);
   }
 
  private:

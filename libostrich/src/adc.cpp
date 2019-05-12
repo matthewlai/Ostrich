@@ -93,7 +93,7 @@ void SingleConversionADC<kADC>::EnsureChannelSetup(int channel, bool is_vbatt) {
       while (GetTimeMicroseconds() < end_time) {}
 
       // 10us sampling time.
-      SetSamplingTime(10000, channel);
+      SetSamplingTime(channel, 10000);
     }
   } else if (ci.channel_type == ChannelType::kTempVbatt) {
     if (is_vbatt) {
@@ -108,7 +108,7 @@ void SingleConversionADC<kADC>::EnsureChannelSetup(int channel, bool is_vbatt) {
         while (GetTimeMicroseconds() < end_time) {}
 
         // 10us sampling time.
-        SetSamplingTime(10000, channel);
+        SetSamplingTime(channel, 10000);
       }
     } else {
       if (!vref_vsense_on_) {
@@ -122,7 +122,7 @@ void SingleConversionADC<kADC>::EnsureChannelSetup(int channel, bool is_vbatt) {
         while (GetTimeMicroseconds() < end_time) {}
 
         // 10us sampling time.
-        SetSamplingTime(10000, channel);
+        SetSamplingTime(channel, 10000);
       }
     }
   }
