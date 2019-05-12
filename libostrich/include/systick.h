@@ -27,6 +27,7 @@ namespace Ostrich {
 void InitSystick();
 uint64_t GetTimeClocks();
 uint64_t GetTimeMilliseconds();
+uint64_t GetTimeMicroseconds();
 
 }; // namespace Ostrich
 

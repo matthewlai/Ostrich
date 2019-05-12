@@ -72,6 +72,10 @@ uint64_t GetTimeMilliseconds() {
   return GetTimeClocks() * 1000 / g_ahb_freq;
 }
 
+uint64_t GetTimeMicroseconds() {
+  return GetTimeClocks() * 1000000 / g_ahb_freq;
+}
+
 }; // namespace Ostrich
 
 extern "C" {

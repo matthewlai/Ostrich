@@ -23,6 +23,7 @@
 #include "gpio.h"
 
 #include <cstdint>
+#include <functional>
 
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/cm3/nvic.h>
@@ -34,9 +35,13 @@ extern uint32_t g_ahb_freq;
 extern uint32_t g_apb1_freq;
 extern uint32_t g_apb2_freq;
 extern uint32_t g_systick_period;
+extern uint32_t g_vdd_100mv;
 
 extern volatile uint32_t g_systick_reloads_high;
 extern volatile uint32_t g_systick_reloads_low;
+
+using ErrorHandler = std::function<void(const std::string& err)>;
+extern ErrorHandler g_error_handler;
 
 struct BoardConfig {
   // Clock settings. See libopencm3/lib/stm32/*/rcc.c.
@@ -52,6 +57,10 @@ struct BoardConfig {
   // Reasonable values are in the hundreds, so the CPU doesn't spend excessive
   // amount of time servicing systick interrupts.
   uint64_t systick_period_clocks;
+
+  // Power supply voltage in 100mV increments. This is used to determine
+  // settings that are voltage-dependent, eg. ADC clock pre-scaler.
+  uint32_t vdd_voltage_100mV;
 };
 
 // This should be defined by the user.
@@ -90,6 +99,16 @@ class ScopedIRQLock {
   uint8_t irq_;
   bool was_enabled_;
 };
+
+void HandleError(const std::string& msg) {
+  g_error_handler(msg);
+}
+
+void AssertTrue(bool cond, const std::string& msg) {
+  if (!cond) {
+    HandleError(msg);
+  }
+}
 
 }; // namespace Ostrich
 

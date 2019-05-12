@@ -218,6 +218,8 @@ constexpr GPIOPortPin PIN_K13 = (static_cast<uint64_t>(GPIOK) << 32) | (1 << 13)
 constexpr GPIOPortPin PIN_K14 = (static_cast<uint64_t>(GPIOK) << 32) | (1 << 14);
 constexpr GPIOPortPin PIN_K15 = (static_cast<uint64_t>(GPIOK) << 32) | (1 << 15);
 
+constexpr GPIOPortPin PIN_INVALID = 0;
+
 
 }; // namespace Gpio
 
