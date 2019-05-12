@@ -131,7 +131,7 @@ class SingleConversionADC : public ADCBase<kADC> {
     }
 
     void SetSamplingTime(uint64_t sampling_time_ns) {
-      adc_->SetSamplingTime(sampling_time_ns, kChannel);
+      adc_->SetSamplingTime(kChannel, sampling_time_ns);
     }
 
     uint16_t ReadU16() { return adc_->ReadChannel<kChannel>(); }

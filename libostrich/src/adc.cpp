@@ -136,7 +136,7 @@ void SingleConversionADC<kADC>::SetSamplingTime(
   for (const auto& option : kSamplingTimes) {
     if (cycle_time_ns * option.cycles >= sampling_time_ns) {
       adc_set_sample_time(kADC, channel, option.setting);
-      break;
+      return;
     }
   }
 
