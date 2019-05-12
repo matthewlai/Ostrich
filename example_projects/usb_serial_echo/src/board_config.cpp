@@ -13,7 +13,7 @@ BoardConfig MakeBoardConfig() {
   // 1 ms.
   bc.systick_period_clocks = 216000;
 
-  bc.vdd_voltage_100mV = 33;
+  bc.vdd_voltage_mV = 3300;
 
   return bc;
 }
