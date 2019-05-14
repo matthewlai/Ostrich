@@ -36,7 +36,7 @@ int main() {
   while (true) {
     if (serial.PortOpen()) {
       serial << temp_sampler.ReadTempC() << std::endl;
-      DelayMilliseconds(1000);
+      Ostrich::DelayMilliseconds(1000);
     }
   }
 }
