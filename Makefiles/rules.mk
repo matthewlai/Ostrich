@@ -116,6 +116,10 @@ TGT_CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls
 TGT_CXXFLAGS	+= -fno-threadsafe-statics -fno-use-cxa-atexit
 TGT_CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 
+# Silence GCC warnings about an ABI conformance bug introduced in GCC 5 and
+# fixed in GCC 7.1 (https://gcc.gnu.org/gcc-7/changes.html)
+TGT_CXXFLAGS	+= -Wno-psabi
+
 ###############################################################################
 # C & C++ preprocessor common flags
 
