@@ -281,16 +281,17 @@ class BufferedOutputStream {
     return *this;
   }
 
-  // We use this to catch std::endl. All other manipulators are no-op.
+  // We use this to catch std::endl and std::flush. All other manipulators are
+  // no-op.
   BufferedOutputStream& operator<<(
     std::ostream& (*manipulator)(std::ostream&)) {
     using char_type = std::ostream::char_type;
     using traits_type = std::ostream::traits_type;
     if (manipulator == &std::endl<char_type, traits_type>) {
       EnqueueOutput("\n", 1);
-      FlushOutput();
+      Flush();
     } else if (manipulator == &std::flush<char_type, traits_type>) {
-      FlushOutput();
+      Flush();
     }
     return *this;
   }
