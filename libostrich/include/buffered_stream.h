@@ -91,9 +91,7 @@ class CircularQueue {
 
 // The Buffered*Stream class provides an interface similar to std::iostream, but
 // with only basic formating functionality and is much lighter weight.
-// Input is always buffered. Output buffering can be disabled by setting
-// kOutputBufferSize to 0. This is slightly faster for streams that output
-// data one byte at a time anyways, and don't benefit from larger block writes.
+// Input is always buffered.
 template <std::size_t kInputBufferSize>
 class BufferedInputStream {
  public:
@@ -228,6 +226,9 @@ class BufferedInputStream {
   std::function<bool(char)> delim_func_;
 };
 
+// Output buffering can be disabled by setting kOutputBufferSize to 0. This is
+// slightly faster for streams that output data one byte at a time anyways, and
+// don't benefit from larger block writes.
 template <std::size_t kOutputBufferSize>
 class BufferedOutputStream {
  public:
@@ -287,9 +288,9 @@ class BufferedOutputStream {
     using traits_type = std::ostream::traits_type;
     if (manipulator == &std::endl<char_type, traits_type>) {
       EnqueueOutput("\n", 1);
-      Flush();
+      FlushOutput();
     } else if (manipulator == &std::flush<char_type, traits_type>) {
-      Flush();
+      FlushOutput();
     }
     return *this;
   }
