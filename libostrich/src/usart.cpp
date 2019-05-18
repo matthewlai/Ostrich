@@ -19,6 +19,20 @@
 
 #include "usart.h"
 
+#include <string>
+
+#include "ostrich.h"
+
+extern "C" {
+/*
+void otg_fs_isr() {
+  if (g_usb_serial) {
+    g_usb_serial->Poll();
+  }
+}
+*/
+}
+
 namespace Ostrich {
 
 }; // namespace Ostrich
