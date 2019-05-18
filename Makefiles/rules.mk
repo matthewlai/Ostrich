@@ -49,7 +49,10 @@ GDB		?= $(PREFIX)-gdb
 OPT		?= -O2
 CSTD		?= -std=c99
 CXXSTD		?= -std=gnu++14
+SPECS		?= --specs=nano.specs --specs=nosys.specs
 
+# Floating point *printf *scanf support
+#SPECS		+= -u _scanf_float -u _printf_float
 
 ###############################################################################
 # Source files
@@ -99,7 +102,7 @@ endif
 ###############################################################################
 # C flags
 
-TGT_CFLAGS	+= $(OPT) $(CSTD) -g
+TGT_CFLAGS	+= $(OPT) $(CSTD) $(SPECS) -g
 TGT_CFLAGS	+= $(ARCH_FLAGS)
 TGT_CFLAGS	+= $(INCLUDES)
 TGT_CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
@@ -109,7 +112,7 @@ TGT_CFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 ###############################################################################
 # C++ flags
 
-TGT_CXXFLAGS	+= $(OPT) $(CXXSTD) -g
+TGT_CXXFLAGS	+= $(OPT) $(CXXSTD) $(SPECS) -g
 TGT_CXXFLAGS	+= $(ARCH_FLAGS)
 TGT_CXXFLAGS	+= $(INCLUDES)
 TGT_CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls
@@ -130,7 +133,7 @@ TGT_CPPFLAGS	+= $(DEFS)
 ###############################################################################
 # Linker flags
 
-TGT_LDFLAGS		+= --static -nostartfiles --specs=nano.specs --specs=nosys.specs -u _printf_float
+TGT_LDFLAGS		+= --static -nostartfiles $(SPECS)
 TGT_LDFLAGS		+= -T$(LDSCRIPT)
 TGT_LDFLAGS		+= $(ARCH_FLAGS)
 TGT_LDFLAGS		+= -Wl,-Map=$(*).map

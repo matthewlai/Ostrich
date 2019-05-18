@@ -1,7 +1,7 @@
 /*
  * This file is part of the libostrich project.
  *
- * Copyright (C) 2017 Matthew Lai <m@matthewlai.ca>
+ * Copyright (C) 2019 Matthew Lai <m@matthewlai.ca>
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by

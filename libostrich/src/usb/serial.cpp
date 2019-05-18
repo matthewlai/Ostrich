@@ -29,6 +29,7 @@
 #include <libopencm3/usb/cdc.h>
 
 #include "ostrich.h"
+#include "util.h"
 
 namespace {
 
@@ -56,8 +57,7 @@ namespace Ostrich {
 
 USBSerial::USBSerial(uint16_t vid, uint16_t pid, uint16_t current_ma,
                      const char* manufacturer, const char* product)
-    : std::iostream(this),
-      usbd_dev_(nullptr),
+    : usbd_dev_(nullptr),
       dev_descriptor_(GetDeviceDescriptor(vid, pid)),
       config_descriptor_(GetConfigDescriptor(current_ma)),
       cdc_functional_descriptors_(GetCDCFunctionalDescriptors()),
@@ -95,42 +95,14 @@ USBSerial::~USBSerial() {
   g_usb_serial = nullptr;
 }
 
-void USBSerial::Send(const char* data, std::size_t length) {
+void USBSerial::OutputImpl(const char* data, std::size_t len) {
   ScopedIRQLock irq_lock(NVIC_OTG_FS_IRQ);
   std::size_t length_written = 0;
-  while (length_written < length) {
-    std::size_t packet_size = std::min((length - length_written), 64u);
+  while (length_written < len) {
+    std::size_t packet_size = std::min((len - length_written), 64u);
     length_written += usbd_ep_write_packet(usbd_dev_, 0x82,
                                            data + length_written, packet_size);
   }
-}
-
-std::streamsize USBSerial::xsputn(const USBSerial::char_type* s,
-                                  std::streamsize count) {
-  Send(s, count);
-  return count;
-}
-
-USBSerial::int_type USBSerial::overflow(USBSerial::int_type ch) {
-  if (!traits_type::eq_int_type(ch, traits_type::eof())) {
-    char_type ch_c = ch;
-    Send(&ch_c, 1);
-  }
-  return 1;
-}
-
-std::streamsize USBSerial::showmanyc() {
-  return receive_buffer_.Available();
-}
-
-USBSerial::int_type USBSerial::underflow() {
-  WaitForData();
-  return traits_type::to_int_type(receive_buffer_.Peek());
-}
-
-USBSerial::int_type USBSerial::uflow() {
-  WaitForData();
-  return traits_type::to_int_type(receive_buffer_.Pop());
 }
 
 /*static*/ void USBSerial::SetConfigCallback(usbd_device* usbd_dev,
@@ -148,14 +120,7 @@ USBSerial::int_type USBSerial::uflow() {
                                           uint8_t /*endpoint*/) {
   char buf[64];
   std::size_t len = usbd_ep_read_packet(usbd_dev, 0x01, buf, 64);
-
-  for (std::size_t i = 0; i < len; ++i) {
-    if (g_usb_serial->receive_buffer_.Full()) {
-      // Drop data if receive buffer is full.
-      break;
-    }
-    g_usb_serial->receive_buffer_.Push(buf[i]);
-  }
+  g_usb_serial->AddDataToBuffer(buf, len);
 }
 
 /*static*/ usbd_request_return_codes USBSerial::ControlRequestCallback(

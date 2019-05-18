@@ -25,118 +25,39 @@
 #include <istream>
 #include <streambuf>
 #include <string>
-#include <queue>
 
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 
+#include "buffered_stream.h"
 #include "gpio.h"
+#include "util.h"
 
 namespace Ostrich {
 
-// Circular queue for one-reader one-writer use.
-template <std::size_t kSize>
-class CircularQueue {
- public:
-  CircularQueue() : push_pos_(0), pop_pos_(0) {}
-
-  // Undefined if queue is full.
-  void Push(char c) volatile {
-    buf_[push_pos_] = c;
-    push_pos_ = (push_pos_ + 1) % kSize;
-  }
-
-  // Undefined if queue is empty.
-  char Pop() volatile {
-    char c = buf_[pop_pos_];
-    pop_pos_ = (pop_pos_ + 1) % kSize;
-    return c;
-  }
-
-  char Peek() const volatile {
-    return buf_[pop_pos_];
-  }
-
-  bool Empty() const volatile {
-    return push_pos_ == pop_pos_;
-  }
-
-  bool Full() const volatile {
-    return (push_pos_ + 1) % kSize == pop_pos_;
-  }
-
-  std::size_t Available() const volatile {
-    return (push_pos_ >= pop_pos_) ?
-        (push_pos_ - pop_pos_) : (push_pos_ + kSize - pop_pos_);
-  }
-
-  std::size_t Capacity() const volatile {
-    return kSize;
-  }
-
- private:
-  char buf_[kSize];
-  std::size_t push_pos_;
-  std::size_t pop_pos_;
-};
-
-// We have a strange setup here. USBSerial derives from both streambuf and iostream.
-// It is primarily a streambuf, and the iostream inheritance allows the user to use
-// it as an iostream wrapped around itself. We call the iostream constructor with
-// "this" in our constructor, and that's the only thing we do with iostream here.
-class USBSerial : public std::streambuf, public std::iostream {
+class USBSerial : public BufferedInputStream<1024>,
+                  public BufferedOutputStream<64> {
  public:
   // The default PIDs here are testing PIDs (http://pid.codes/1209/0001/).
   // Make sure to change them before redistributing or selling any device!
-  USBSerial(uint16_t vid = 0x1209, uint16_t pid = 0x0001, uint16_t current_ma = 100,
-            const char* manufacturer = "Ostrich", const char* product = "CDC-ACM");
+  USBSerial(uint16_t vid = 0x1209, uint16_t pid = 0x0001,
+            uint16_t current_ma = 100, const char* manufacturer = "Ostrich",
+            const char* product = "CDC-ACM");
   ~USBSerial();
 
   USBSerial(const USBSerial&) = delete;
   USBSerial& operator=(const USBSerial&) = delete;
 
-  // These typedefs exist in both streambuf and iostream, so we need to disambiguate.
-  using std::streambuf::int_type;
-  using std::streambuf::traits_type;
-  using std::streambuf::char_type;
-
   // An application on the host has opened the serial port.
   bool PortOpen() { return dtr_; }
-
-  void Send(const char* data, std::size_t length);
-  void Send(const std::string& s) {
-    Send(s.data(), s.size());
-  }
-
-  std::size_t DataAvailable() const {
-    return receive_buffer_.Available();
-  }
-
-  // Wait for the receive buffer to become non-empty.
-  void WaitForData() {
-    while (receive_buffer_.Empty()) {}
-  }
-
-  // Non-blocking receive.
-  std::size_t Receive(char* buf, std::size_t buf_size) {
-    std::size_t to_read = std::min(buf_size, receive_buffer_.Available());
-    for (std::size_t i = 0; i < to_read; ++i) {
-      buf[i] = receive_buffer_.Pop();
-    }
-    return to_read;
-  }
 
   void Poll() { usbd_poll(usbd_dev_); }
 
  protected:
-  // std::streambuf interface (outputs)
-  std::streamsize xsputn(const char_type* s, std::streamsize count) override;
-  int_type overflow(int_type ch = traits_type::eof()) override;
+  void OutputImpl(const char* data, std::size_t len) override;
 
-  // std::streambuf interface (inputs)
-  std::streamsize showmanyc() override;
-  int_type underflow() override;
-  int_type uflow() override;
+  // 64 bytes is the maximum packet length in FullSpeed mode.
+  std::size_t OptimalWriteBlockSize() const override { return 64; }
 
  private:
   struct CDCFunctionalDescriptors {
@@ -172,8 +93,6 @@ class USBSerial : public std::streambuf, public std::iostream {
   char unique_id_[13];
 
   volatile bool dtr_;
-
-  volatile CircularQueue<1024> receive_buffer_;
 };
 
 } // namespace Ostrich
