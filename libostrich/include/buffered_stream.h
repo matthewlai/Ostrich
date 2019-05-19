@@ -345,6 +345,8 @@ class BufferedOutputStream {
   CircularQueue<kOutputBufferSize> output_buffer_;
 };
 
+using UnbufferedOutputStream = BufferedOutputStream<0>;
+
 } // namespace Ostrich
 
 #endif // __BUFFERED_STREAM_H__
