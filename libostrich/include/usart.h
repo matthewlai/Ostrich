@@ -20,14 +20,12 @@
 #ifndef __USART_H__
 #define __USART_H__
 
-#if 0
-
-#include <istream>
-#include <streambuf>
 #include <vector>
 
+#include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/usart.h>
 
+#include "buffered_stream.h"
 #include "gpio.h"
 #include "util.h"
 
@@ -101,16 +99,12 @@ const USARTInfo& UsartInfo(uint32_t usart) {
   return kUSARTInfo[UsartToIndex(usart)];
 }
 
-// We have a strange setup here. USART derives from both streambuf and iostream.
-// It is primarily a streambuf, and the iostream inheritance allows the user to use
-// it as an iostream wrapped around itself. We call the iostream constructor with
-// "this" in our constructor, and that's the only thing we do with iostream here.
 template <uint32_t kUsart, GPIOPortPin kTxPin, GPIOPortPin kRxPin>
-class USART : public std::streambuf, public std::iostream {
+class USART : public BufferedInputStream<1024>, public BufferedOutputStream<0> {
  public:
   USART(uint32_t baud_rate, uint32_t data_bits = 8, uint32_t stop_bits = 1,
         uint32_t parity = USART_PARITY_NONE) 
-    : std::iostream(this), info_(UsartInfo(kUsart)) {
+    : info_(UsartInfo(kUsart)) {
     if (in_use_) {
       HandleError(std::string("USART already in use: ") + info_.str_name);
     } 
@@ -152,6 +146,7 @@ class USART : public std::streambuf, public std::iostream {
     usart_set_mode(kUsart, USART_MODE_TX_RX);
     usart_set_parity(kUsart, parity);
     usart_set_flow_control(kUsart, USART_FLOWCONTROL_NONE);
+    usart_enable_rx_interrupt(kUsart);
 
     /* Finally enable the USART. */
     usart_enable(kUsart);
@@ -167,59 +162,15 @@ class USART : public std::streambuf, public std::iostream {
   USART(const USART&) = delete;
   USART& operator=(const USART&) = delete;
 
-  // These typedefs exist in both streambuf and iostream, so we need to disambiguate.
-  using std::streambuf::int_type;
-  using std::streambuf::traits_type;
-  using std::streambuf::char_type;
-
-  void Send(const char* data, std::size_t length) {
-    //usart_wait_send_ready()
-  }
-
-  void Send(const std::string& s) { Send(s.data(), s.size()); }
-
-  std::size_t DataAvailable() const { return receive_buffer_.Available(); }
-
-  // Wait for the receive buffer to become non-empty.
-  void WaitForData() { while (receive_buffer_.Empty()) {} }
-
-  // Non-blocking receive.
-  std::size_t Receive(char* buf, std::size_t buf_size) {
-    std::size_t to_read = std::min(buf_size, receive_buffer_.Available());
-    for (std::size_t i = 0; i < to_read; ++i) {
-      buf[i] = receive_buffer_.Pop();
-    }
-    return to_read;
-  }
-
-  void Poll() { usbd_poll(usbd_dev_); }
+  void Poll() { /**/ }
 
  protected:
-  // std::streambuf interface (outputs)
-  std::streamsize xsputn(const char_type* s, std::streamsize count) override {
-    Send(s, count);
-    return count;
-  }
-
-  int_type overflow(int_type ch = traits_type::eof()) override {
-    if (!traits_type::eq_int_type(ch, traits_type::eof())) {
-      char_type ch_c = ch;
-      Send(&ch_c, 1);
+  //void AddDataToBuffer(
+  //    const char* data, std::size_t len)
+  void OutputImpl(const char* data, std::size_t len) override {
+    for (std::size_t i = 0; i < len; ++i) {
+      usart_send_blocking(kUsart, data[i]);
     }
-    return 1;
-  }
-
-  // std::streambuf interface (inputs)
-  std::streamsize showmanyc() override {
-    return receive_buffer_.Available();
-  }
-  int_type underflow() override  {
-    WaitForData();
-    return traits_type::to_int_type(receive_buffer_.Peek());
-  }
-  int_type uflow() override {
-    WaitForData();
-    return traits_type::to_int_type(receive_buffer_.Pop());
   }
 
  private:
@@ -229,7 +180,5 @@ class USART : public std::streambuf, public std::iostream {
 };
 
 }; // namespace Ostrich
-
-#endif
 
 #endif // __USART_H__
