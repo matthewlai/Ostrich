@@ -32,15 +32,13 @@ int main() {
   while (true) {
     if (!port_open && serial.PortOpen()) {
       // Port has just been opened (DTR received).
-      serial << "Port opened" << std::endl;
+      serial << "Port opened" << '\n';
     }
 
     port_open = serial.PortOpen();
 
     if (serial.DataAvailable()) {
-      std::string line;
-      std::getline(serial, line);
-      serial << line << std::endl;
+      serial << serial.GetLine() << std::endl;
     }
   }
 }
