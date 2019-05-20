@@ -158,8 +158,15 @@ class BufferedInputStream {
     return ret;
   }
 
-  bool DataAvailable() const {
-    return !input_buffer_.Empty();
+  void Read(char* buf, std::size_t size) {
+    for (std::size_t i = 0; i < size; ++i) {
+      BlockUntilInputAvailable();
+      buf[i] = input_buffer_.Pop();
+    }
+  }
+
+  std::size_t DataAvailable() const {
+    return input_buffer_.Available();
   }
 
  protected:
@@ -294,6 +301,10 @@ class BufferedOutputStream {
       Flush();
     }
     return *this;
+  }
+
+  void Write(char* buf, std::size_t size) {
+    EnqueueOutput(buf, size);
   }
 
  protected:
