@@ -1081,17 +1081,6 @@ PA4
 Text Label 14800 7850 2    60   ~ 0
 PA5
 $Comp
-L conn1:CONN_01X10 J4
-U 1 1 58A50C2C
-P 16500 6350
-F 0 "J4" H 16500 6900 50  0000 C CNN
-F 1 "CONN_01X10" V 16600 6350 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x10_Pitch2.54mm" H 16500 6350 50  0001 C CNN
-F 3 "" H 16500 6350 50  0001 C CNN
-	1    16500 6350
-	1    0    0    -1  
-$EndComp
-$Comp
 L conn1:CONN_01X08 J5
 U 1 1 58A50CBE
 P 16500 7650
@@ -1128,34 +1117,6 @@ Text Label 12250 7400 0    60   ~ 0
 PC6
 Text Label 2450 5800 2    60   ~ 0
 PG7
-Text Label 16100 6800 2    60   ~ 0
-PC7
-Text Label 16100 6700 2    60   ~ 0
-PC8
-Text Label 16100 6600 2    60   ~ 0
-PA15
-Text Label 16100 6500 2    60   ~ 0
-PC12
-Text Label 16100 6400 2    60   ~ 0
-PC11
-Text Label 16100 6300 2    60   ~ 0
-PC10
-Text Label 16100 6000 2    60   ~ 0
-PC9
-Text Label 16100 5900 2    60   ~ 0
-PA8
-NoConn ~ 16300 6100
-$Comp
-L ostrich-rescue:GND-power #PWR048
-U 1 1 58A55075
-P 15700 6250
-F 0 "#PWR048" H 15700 6000 50  0001 C CNN
-F 1 "GND" H 15700 6100 50  0000 C CNN
-F 2 "" H 15700 6250 50  0000 C CNN
-F 3 "" H 15700 6250 50  0000 C CNN
-	1    15700 6250
-	1    0    0    -1  
-$EndComp
 Text Label 12250 7500 0    60   ~ 0
 PC7
 Text Label 12250 7600 0    60   ~ 0
@@ -1173,51 +1134,12 @@ PC9
 Text Label 12050 4200 0    60   ~ 0
 PA8
 $Comp
-L conn1:CONN_01X10 J6
-U 1 1 58A57186
-P 17850 6350
-F 0 "J6" H 17850 6900 50  0000 C CNN
-F 1 "CONN_01X10" V 17950 6350 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x10_Pitch2.54mm" H 17850 6350 50  0001 C CNN
-F 3 "" H 17850 6350 50  0001 C CNN
-	1    17850 6350
-	1    0    0    -1  
-$EndComp
-Text Label 17450 6800 2    60   ~ 0
-PC7
-Text Label 17450 6700 2    60   ~ 0
-PC8
-Text Label 17450 6600 2    60   ~ 0
-PA15
-Text Label 17450 6500 2    60   ~ 0
-PC12
-Text Label 17450 6400 2    60   ~ 0
-PC11
-Text Label 17450 6300 2    60   ~ 0
-PC10
-Text Label 17450 6000 2    60   ~ 0
-PC9
-Text Label 17450 5900 2    60   ~ 0
-PA8
-$Comp
-L ostrich-rescue:GND-power #PWR054
-U 1 1 58A5728A
-P 17050 6250
-F 0 "#PWR054" H 17050 6000 50  0001 C CNN
-F 1 "GND" H 17050 6100 50  0000 C CNN
-F 2 "" H 17050 6250 50  0000 C CNN
-F 3 "" H 17050 6250 50  0000 C CNN
-	1    17050 6250
-	1    0    0    -1  
-$EndComp
-NoConn ~ 17650 6100
-$Comp
 L ld1117s33tr_wtab:LD1117S33TR_WTAB U1
 U 1 1 58A579EF
 P 8700 1400
 F 0 "U1" H 8700 1800 50  0000 C CNN
 F 1 "AZ1117-3.3" H 8700 1700 50  0000 C CNN
-F 2 "SOT-223" H 8650 1600 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-223" H 8650 1600 50  0000 C CNN
 F 3 "" H 8700 1400 50  0000 C CNN
 	1    8700 1400
 	1    0    0    -1  
@@ -1368,26 +1290,6 @@ Wire Wire Line
 Wire Wire Line
 	9100 1250 9200 1250
 Wire Wire Line
-	17050 6200 17650 6200
-Wire Wire Line
-	17050 6250 17050 6200
-Wire Wire Line
-	17650 6800 17450 6800
-Wire Wire Line
-	17450 6700 17650 6700
-Wire Wire Line
-	17650 6600 17450 6600
-Wire Wire Line
-	17450 6500 17650 6500
-Wire Wire Line
-	17650 6400 17450 6400
-Wire Wire Line
-	17450 6300 17650 6300
-Wire Wire Line
-	17650 6000 17450 6000
-Wire Wire Line
-	17450 5900 17650 5900
-Wire Wire Line
 	12250 8000 11850 8000
 Wire Wire Line
 	12250 7900 11850 7900
@@ -1403,26 +1305,6 @@ Wire Wire Line
 	12050 4900 11850 4900
 Wire Wire Line
 	12050 4200 11850 4200
-Wire Wire Line
-	15700 6200 16300 6200
-Wire Wire Line
-	15700 6250 15700 6200
-Wire Wire Line
-	16300 6800 16100 6800
-Wire Wire Line
-	16100 6700 16300 6700
-Wire Wire Line
-	16300 6600 16100 6600
-Wire Wire Line
-	16100 6500 16300 6500
-Wire Wire Line
-	16300 6400 16100 6400
-Wire Wire Line
-	16100 6300 16300 6300
-Wire Wire Line
-	16300 6000 16100 6000
-Wire Wire Line
-	16100 5900 16300 5900
 Wire Wire Line
 	2450 5800 2650 5800
 Wire Wire Line
@@ -2468,22 +2350,7 @@ SD_CD
 Wire Wire Line
 	2500 8800 2650 8800
 Text Notes 16050 7150 0    60   ~ 0
-Bottom left
-Text Notes 15550 5750 0    60   ~ 0
-Top right (0.1" aligned)
-Text Notes 16900 5750 0    60   ~ 0
-Top right (Arduino aligned)
-$Comp
-L conn1:CONN_01X04 J9
-U 1 1 58B10013
-P 16900 3000
-F 0 "J9" H 16900 3250 50  0000 C CNN
-F 1 "CONN_01X04" V 17000 3000 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x04_Pitch2.54mm" H 16900 3000 50  0001 C CNN
-F 3 "" H 16900 3000 50  0001 C CNN
-	1    16900 3000
-	1    0    0    -1  
-$EndComp
+Bottom right
 Text Notes 16650 2700 0    60   ~ 0
 SWD debug
 $Comp
@@ -2709,14 +2576,98 @@ PA7
 Wire Wire Line
 	12050 4100 11850 4100
 $Comp
-L ostrich-rescue:GND-power #PWR?
+L ostrich-rescue:GND-power #PWR0101
 U 1 1 5CF53B47
 P 16100 8000
-F 0 "#PWR?" H 16100 7750 50  0001 C CNN
+F 0 "#PWR0101" H 16100 7750 50  0001 C CNN
 F 1 "GND" H 16100 7850 50  0000 C CNN
 F 2 "" H 16100 8000 50  0000 C CNN
 F 3 "" H 16100 8000 50  0000 C CNN
 	1    16100 8000
+	1    0    0    -1  
+$EndComp
+Text Label 12050 5400 0    60   ~ 0
+SWO
+Wire Wire Line
+	12050 5400 11850 5400
+$Comp
+L conn1:CONN_01X06 J9
+U 1 1 5CEB4AE1
+P 16900 3100
+F 0 "J9" H 16978 3141 50  0000 L CNN
+F 1 "CONN_01X06" H 16978 3050 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical" H 16900 3100 50  0001 C CNN
+F 3 "" H 16900 3100 50  0001 C CNN
+	1    16900 3100
+	1    0    0    -1  
+$EndComp
+Text Label 16550 3250 2    60   ~ 0
+NRST
+Wire Wire Line
+	16550 3250 16700 3250
+Text Label 16550 3350 2    60   ~ 0
+SWO
+Wire Wire Line
+	16550 3350 16700 3350
+Text Notes 15550 5750 0    60   ~ 0
+Top right (0.1" aligned)
+Wire Wire Line
+	16100 5900 16300 5900
+Wire Wire Line
+	16300 6000 16100 6000
+Wire Wire Line
+	16100 6300 16300 6300
+Wire Wire Line
+	16300 6400 16100 6400
+Wire Wire Line
+	16100 6500 16300 6500
+Wire Wire Line
+	16300 6600 16100 6600
+Wire Wire Line
+	16100 6700 16300 6700
+Wire Wire Line
+	16300 6800 16100 6800
+Wire Wire Line
+	15700 6250 15700 6200
+Wire Wire Line
+	15700 6200 16300 6200
+$Comp
+L ostrich-rescue:GND-power #PWR048
+U 1 1 58A55075
+P 15700 6250
+F 0 "#PWR048" H 15700 6000 50  0001 C CNN
+F 1 "GND" H 15700 6100 50  0000 C CNN
+F 2 "" H 15700 6250 50  0000 C CNN
+F 3 "" H 15700 6250 50  0000 C CNN
+	1    15700 6250
+	1    0    0    -1  
+$EndComp
+NoConn ~ 16300 6100
+Text Label 16100 5900 2    60   ~ 0
+PA8
+Text Label 16100 6000 2    60   ~ 0
+PC9
+Text Label 16100 6300 2    60   ~ 0
+PC10
+Text Label 16100 6400 2    60   ~ 0
+PC11
+Text Label 16100 6500 2    60   ~ 0
+PC12
+Text Label 16100 6600 2    60   ~ 0
+PA15
+Text Label 16100 6700 2    60   ~ 0
+PC8
+Text Label 16100 6800 2    60   ~ 0
+PC7
+$Comp
+L conn1:CONN_01X10 J4
+U 1 1 58A50C2C
+P 16500 6350
+F 0 "J4" H 16500 6900 50  0000 C CNN
+F 1 "CONN_01X10" V 16600 6350 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" H 16500 6350 50  0001 C CNN
+F 3 "" H 16500 6350 50  0001 C CNN
+	1    16500 6350
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
