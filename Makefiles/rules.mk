@@ -51,6 +51,17 @@ CSTD		?= -std=c99
 CXXSTD		?= -std=gnu++14
 SPECS		?= --specs=nano.specs --specs=nosys.specs
 
+FORCE_LINK	:= -Wl,--undefined=InitOstrich
+FORCE_LINK	+= -Wl,--undefined=otg_fs_isr
+FORCE_LINK	+= -Wl,--undefined=usart1_isr
+FORCE_LINK	+= -Wl,--undefined=usart2_isr
+FORCE_LINK	+= -Wl,--undefined=usart3_isr
+FORCE_LINK	+= -Wl,--undefined=uart4_isr
+FORCE_LINK	+= -Wl,--undefined=uart5_isr
+FORCE_LINK	+= -Wl,--undefined=usart6_isr
+FORCE_LINK	+= -Wl,--undefined=uart7_isr
+FORCE_LINK	+= -Wl,--undefined=uart8_isr
+
 # Floating point *printf *scanf support
 #SPECS		+= -u _scanf_float -u _printf_float
 
@@ -138,7 +149,7 @@ TGT_LDFLAGS		+= -T$(LDSCRIPT)
 TGT_LDFLAGS		+= $(ARCH_FLAGS)
 TGT_LDFLAGS		+= -Wl,-Map=$(*).map
 TGT_LDFLAGS		+= -Wl,--gc-sections
-TGT_LDFLAGS		+= -Wl,--undefined=InitOstrich -Wl,--undefined=otg_fs_isr
+TGT_LDFLAGS		+= $(FORCE_LINK)
 ifeq ($(V),99)
 TGT_LDFLAGS		+= -Wl,--print-gc-sections
 endif
