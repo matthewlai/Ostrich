@@ -43,6 +43,9 @@ extern volatile uint32_t g_systick_reloads_low;
 using ErrorHandler = std::function<void(const std::string& err)>;
 extern ErrorHandler g_error_handler;
 
+using LoggingHandler = std::function<void(const std::string& err)>;
+extern LoggingHandler g_logging_handler;
+
 struct BoardConfig {
   // Clock settings. See libopencm3/lib/stm32/*/rcc.c.
   rcc_clock_scale clock_scale;
@@ -102,6 +105,18 @@ class ScopedIRQLock {
 
 inline void HandleError(const std::string& msg) {
   g_error_handler(msg);
+}
+
+inline void SetErrorHandler(ErrorHandler eh) {
+  g_error_handler = eh;
+}
+
+inline void Log(const std::string& msg) {
+  g_logging_handler(msg);
+}
+
+inline void SetLoggingHandler(LoggingHandler lh) {
+  g_logging_handler = lh;
 }
 
 inline void AssertTrue(bool cond, const std::string& msg) {
