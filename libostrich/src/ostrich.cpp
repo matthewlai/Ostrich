@@ -37,9 +37,6 @@ volatile uint32_t g_systick_reloads_low;
 ErrorHandler g_error_handler;
 LoggingHandler g_logging_handler;
 
-// Default error handler locks up the system.
-ErrorHandler error_handler = [](const std::string&) { LockUp(); };
-
 void Init() {
   auto board_config = MakeBoardConfig();
 
