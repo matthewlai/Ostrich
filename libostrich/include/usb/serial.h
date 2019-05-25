@@ -35,7 +35,7 @@
 
 namespace Ostrich {
 
-class USBSerial : public BufferedInputStream<1024>,
+class USBSerial : public BufferedInputStream<512>,
                   public BufferedOutputStream<64> {
  public:
   // The default PIDs here are testing PIDs (http://pid.codes/1209/0001/).
@@ -53,11 +53,22 @@ class USBSerial : public BufferedInputStream<1024>,
 
   void Poll() { usbd_poll(usbd_dev_); }
 
+  uint32_t BaudRate() const { return baud_rate_; }
+
  protected:
   void OutputImpl(const char* data, std::size_t len) override;
 
   // 64 bytes is the maximum packet length in FullSpeed mode.
   std::size_t OptimalWriteBlockSize() const override { return 64; }
+
+  void InputDataRead() override {
+    if (endpoint_nak_) {
+      if (ReceiveBufferSpace() >= 64) {
+        endpoint_nak_ = false;
+        usbd_ep_nak_set(usbd_dev_, 0x01, 0);
+      }
+    }
+  }
 
  private:
   struct CDCFunctionalDescriptors {
@@ -93,6 +104,12 @@ class USBSerial : public BufferedInputStream<1024>,
   char unique_id_[13];
 
   volatile bool dtr_;
+
+  // Whether we have told the endpoint to stop accepting data (because buffer is
+  // full).
+  volatile bool endpoint_nak_;
+
+  volatile uint32_t baud_rate_;
 };
 
 } // namespace Ostrich

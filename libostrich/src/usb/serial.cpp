@@ -63,7 +63,8 @@ USBSerial::USBSerial(uint16_t vid, uint16_t pid, uint16_t current_ma,
       cdc_functional_descriptors_(GetCDCFunctionalDescriptors()),
       comm_interface_(GetCommInterface()),
       data_interface_(GetDataInterface()),
-      dtr_(false) {
+      dtr_(false),
+      endpoint_nak_(false) {
 
   if (g_usb_serial != nullptr) {
     HandleError("Only one USB service can be instantiated at a time.");
@@ -121,10 +122,16 @@ void USBSerial::OutputImpl(const char* data, std::size_t len) {
   char buf[64];
   std::size_t len = usbd_ep_read_packet(usbd_dev, 0x01, buf, 64);
   g_usb_serial->AddDataToBuffer(buf, len);
+
+  // NAK the packet if we don't have enough space for 2 more packets.
+  if (g_usb_serial->ReceiveBufferSpace() < 128) {
+    usbd_ep_nak_set(usbd_dev, 0x01, 1);
+    g_usb_serial->endpoint_nak_ = true;
+  }
 }
 
 /*static*/ usbd_request_return_codes USBSerial::ControlRequestCallback(
-    usbd_device* /*usbd_dev*/, usb_setup_data* req, uint8_t** /*buf*/,
+    usbd_device* /*usbd_dev*/, usb_setup_data* req, uint8_t** buf,
     uint16_t* len,
   void (**/*complete*/)(usbd_device* usbd_dev, usb_setup_data* req)) {
   switch (req->bRequest) {
@@ -136,6 +143,11 @@ void USBSerial::OutputImpl(const char* data, std::size_t len) {
       if (*len < sizeof(usb_cdc_line_coding)) {
         return USBD_REQ_NOTSUPP;
       }
+
+      usb_cdc_line_coding* line_coding =
+          reinterpret_cast<usb_cdc_line_coding*>(*buf);
+
+      g_usb_serial->baud_rate_ = line_coding->dwDTERate;
 
       return USBD_REQ_HANDLED;
     }
