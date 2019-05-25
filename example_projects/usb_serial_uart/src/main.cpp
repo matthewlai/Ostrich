@@ -17,6 +17,7 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <memory>
 #include <string>
 
 #include "ostrich.h"
@@ -29,16 +30,13 @@ using Ostrich::USART;
 using Ostrich::OutputPin;
 using namespace Ostrich::GpioDef;
 
-constexpr auto kUartTxPin = PIN_C10;
-constexpr auto kUartRxPin = PIN_C11;
-constexpr auto kUart = USART3;
-constexpr int kBaudRate = 115200;
+constexpr auto kUartTxPin = PIN_G14;
+constexpr auto kUartRxPin = PIN_G9;
+constexpr auto kUart = USART6;
+constexpr auto kFlushIntervalMilliseconds = 10;
 
 int main() {
   USBSerial usb_serial;
-
-  // Wait for port to be opened.
-  while (!usb_serial.PortOpen()) {}
 
   Ostrich::SetErrorHandler([&usb_serial](const std::string& error) {
     usb_serial << error << std::endl;
@@ -48,7 +46,15 @@ int main() {
     usb_serial << log << std::endl;
   });
 
-  USART<kUart, kUartTxPin, kUartRxPin> usart(kBaudRate);
+  // Wait for port to be opened.
+  while (!usb_serial.PortOpen()) {}
+
+  uint32_t baud_rate = usb_serial.BaudRate();
+
+  using UsartPortType = USART<kUart, kUartTxPin, kUartRxPin>;
+  auto usart = std::make_unique<UsartPortType>(baud_rate);
+
+  uint64_t last_flush_time = Ostrich::GetTimeMilliseconds();
 
   while (true) {
     auto usb_available = usb_serial.DataAvailable();
@@ -56,17 +62,29 @@ int main() {
     if (usb_available) {
       std::vector<char> buf(usb_available);
       usb_serial.Read(buf.data(), usb_available);
-      usart.Write(buf.data(), usb_available);
-      usart.Flush();
+      usart->Write(buf.data(), usb_available);
     }
 
-    auto usart_available = usart.DataAvailable();
+    auto usart_available = usart->DataAvailable();
 
     if (usart_available) {
       std::vector<char> buf(usart_available);
-      usart.Read(buf.data(), usart_available);
+      usart->Read(buf.data(), usart_available);
       usb_serial.Write(buf.data(), usart_available);
+    }
+
+    if (usb_serial.BaudRate() != baud_rate) {
+      baud_rate = usb_serial.BaudRate();
+      usart.reset();
+      usart.reset(new USART<kUart, kUartTxPin, kUartRxPin>(baud_rate));
+    }
+
+    // Don't let data sit in the buffer for too long.
+    uint64_t now = Ostrich::GetTimeMilliseconds();
+    if ((now - last_flush_time) > kFlushIntervalMilliseconds) {
+      usart->Flush();
       usb_serial.Flush();
+      last_flush_time = now;
     }
   }
 }
