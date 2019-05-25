@@ -127,7 +127,7 @@ class BufferedInputStream {
             int> = 0>
   BufferedInputStream& operator>>(T& c) {
     BlockUntilInputAvailable();
-    c = input_buffer_.Pop();
+    c = GetNextChar();
     return *this;
   }
 
@@ -148,7 +148,7 @@ class BufferedInputStream {
     char c;
     do {
       BlockUntilInputAvailable();
-      c = input_buffer_.Pop();
+      c = GetNextChar();
       if (c == '\n') {
         break;
       } else {
@@ -161,7 +161,7 @@ class BufferedInputStream {
   void Read(char* buf, std::size_t size) {
     for (std::size_t i = 0; i < size; ++i) {
       BlockUntilInputAvailable();
-      buf[i] = input_buffer_.Pop();
+      buf[i] = GetNextChar();
     }
   }
 
@@ -169,11 +169,19 @@ class BufferedInputStream {
     return input_buffer_.Available();
   }
 
+  std::size_t ReceiveBufferSpace() const {
+    return input_buffer_.Capacity() - input_buffer_.Available();
+  }
+
  protected:
   // Derived classes can use this function as a signal to provide data using the
   // AddDataToBuffer() function. If AddDataToBuffer() is called from an ISR for
   // example, calls to this function may be ignored.
   virtual void InputData(std::size_t /*requested_data_len*/) { return; }
+
+  // Derived classes can use this as a signal that data has been read by the
+  // user, so that if the input buffer was full before, it may no longer be.
+  virtual void InputDataRead() { return; }
 
   // Derived classes use this function to add data to the input buffer. The
   // derived class can either call this function as a response to RequestData(),
@@ -202,7 +210,7 @@ class BufferedInputStream {
       BlockUntilInputAvailable();
       c = input_buffer_.Peek();
       if (delim_func_(c)) {
-        input_buffer_.Pop();
+        GetNextChar();
       } else {
         break;
       }
@@ -214,7 +222,7 @@ class BufferedInputStream {
       c = input_buffer_.Peek();
       if (!delim_func_(c)) {
         ret.push_back(c);
-        input_buffer_.Pop();
+        GetNextChar();
       } else {
         break;
       }
@@ -227,6 +235,12 @@ class BufferedInputStream {
     while (input_buffer_.Empty()) {
       WaitForInterrupt();
     }
+  }
+
+  char GetNextChar() {
+    char c = input_buffer_.Pop();
+    InputDataRead();
+    return c;
   }
 
   volatile CircularQueue<kInputBufferSize> input_buffer_;
