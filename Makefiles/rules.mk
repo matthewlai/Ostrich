@@ -48,7 +48,7 @@ OBJDUMP		:= $(PREFIX)-objdump
 GDB		?= $(PREFIX)-gdb
 OPT		?= -O2
 CSTD		?= -std=c99
-CXXSTD		?= -std=gnu++14
+CXXSTD		?= -std=gnu++17
 SPECS		?= --specs=nano.specs --specs=nosys.specs
 
 FORCE_LINK	:= -Wl,--undefined=InitOstrich
