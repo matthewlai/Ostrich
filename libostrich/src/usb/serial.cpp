@@ -57,7 +57,9 @@ namespace Ostrich {
 
 USBSerial::USBSerial(uint16_t vid, uint16_t pid, uint16_t current_ma,
                      const char* manufacturer, const char* product)
-    : usbd_dev_(nullptr),
+    : pin_allocation_dm_(GPIOManager::GetInstance().AllocatePin(PIN_A11)),
+      pin_allocation_dp_(GPIOManager::GetInstance().AllocatePin(PIN_A12)),
+      usbd_dev_(nullptr),
       dev_descriptor_(GetDeviceDescriptor(vid, pid)),
       config_descriptor_(GetConfigDescriptor(current_ma)),
       cdc_functional_descriptors_(GetCDCFunctionalDescriptors()),
@@ -70,8 +72,8 @@ USBSerial::USBSerial(uint16_t vid, uint16_t pid, uint16_t current_ma,
     HandleError("Only one USB service can be instantiated at a time.");
   }
 
-  GPIOManager::GetInstance().AllocateAFPin(PIN_A11, GPIO_AF10);
-  GPIOManager::GetInstance().AllocateAFPin(PIN_A12, GPIO_AF10);
+  pin_allocation_dm_.SetAF(10);
+  pin_allocation_dp_.SetAF(10);
 
   desig_get_unique_id_as_dfu(unique_id_);
 

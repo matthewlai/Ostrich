@@ -24,29 +24,22 @@ namespace Ostrich {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Weffc++"
 GPIOManager::GPIOManager() {
-  for (auto& port_users : allocations_) {
-    for (auto& pin_users : port_users) {
-      pin_users = 0;
-    }
-  }
-
-  for (auto& clock_enabled : port_clock_enabled_) {
-    clock_enabled = false;
+  for (auto& port_in_use : in_use_) {
+    port_in_use = 0x0000;
   }
 }
 #pragma GCC diagnostic pop
 
-void GPIOManager::AllocatePins(uint32_t port, uint16_t pin) {
+void GPIOManager::DeallocatePin(GPIOPortPin portpin) {
+  uint32_t port = UnpackPort(portpin);
   auto port_index = PortToIndex(port);
-  while (pin) {
-    auto pin_num = __builtin_ctz(pin);
-    pin &= ~(1 << pin_num);
-    ++allocations_[port_index][pin_num];
-  }
+  uint16_t pin = UnpackPin(portpin);
 
-  if (!port_clock_enabled_[port_index]) {
-    EnableClock(port);
-    port_clock_enabled_[port_index] = true;
+  in_use_[port_index] &= ~pin;
+
+  // Turn the lights out if we are the last one.
+  if (in_use_[port_index] == 0x0000) {
+    SetClock(port, false);
   }
 }
 
@@ -59,9 +52,15 @@ void GPIOManager::AllocatePins(uint32_t port, uint16_t pin) {
   return 0;
 }
 
-/*static*/ void GPIOManager::EnableClock(uint32_t port) {
+/*static*/ void GPIOManager::SetClock(uint32_t port, bool on) {
   #define GPIO_TUPLES_ITEM(gpio_port, port_rcc, index) \
-    if (port == gpio_port) rcc_periph_clock_enable(port_rcc);
+    if (port == gpio_port) { \
+      if (on) { \
+        rcc_periph_clock_enable(port_rcc); \
+      } else { \
+        rcc_periph_clock_disable(port_rcc); \
+      } \
+    }
   GPIO_TUPLES
   #undef GPIO_TUPLES_ITEM
 }

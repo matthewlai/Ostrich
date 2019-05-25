@@ -48,93 +48,173 @@ namespace Ostrich {
 constexpr size_t kNumGPIOPorts = 11;
 
 // GPIOManager handles peripheral clock enable, and GPIO pin allocations.
-class GPIOManager : public NonCopyable {
+class GPIOManager : public Singleton {
  public:
   static GPIOManager& GetInstance() {
     static GPIOManager instance;
     return instance;
   }
 
-  // Allocate one or more pins (pin is a bitfield), and turn on clock for
-  // the GPIO if necessary.
-  void AllocatePins(uint32_t port, uint16_t pin);
+  // This is an RAII token representing a grant from GPIOManager to the holder
+  // to use the pin.
+  class PinAllocation : public NonCopyable {
+   public:
+    friend class GPIOManager;
 
-  void AllocatePin(GPIOPortPin portpin) {
-    AllocatePins(UnpackPort(portpin), UnpackPin(portpin));
-  }
+    PinAllocation(PinAllocation&& other) {
+      portpin_ = other.portpin_;
+      other.portpin_ = PIN_INVALID;
+    }
 
-  void AllocateAFPin(GPIOPortPin portpin, uint32_t af,
-                     uint32_t pupd = GPIO_PUPD_NONE) {
-    AllocatePin(portpin);
-    auto port = UnpackPort(portpin);
-    auto pin = UnpackPin(portpin);
-    gpio_mode_setup(port, GPIO_MODE_AF, pupd, pin);
-    gpio_set_af(port, af, pin);
-  }
+    PinAllocation& operator=(PinAllocation&& other) {
+      portpin_ = other.portpin_;
+      other.portpin_ = PIN_INVALID;
+      return *this;
+    }
 
-  void AllocateAnalogPin(GPIOPortPin portpin) {
-    AllocatePin(portpin);
-    auto port = UnpackPort(portpin);
-    auto pin = UnpackPin(portpin);
-    gpio_mode_setup(port, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, pin);
+    ~PinAllocation() {
+      // portpin_ may be invalid if this PinAllocation was std::move()d.
+      if (portpin_ != PIN_INVALID) {
+        GPIOManager::GetInstance().DeallocatePin(portpin_);
+      }
+    }
+
+    void SetInput(uint32_t pupd = GPIO_PUPD_NONE) {
+      gpio_mode_setup(UnpackPort(portpin_), GPIO_MODE_INPUT, pupd,
+          UnpackPin(portpin_));
+    }
+
+    void SetOutput(uint32_t pupd = GPIO_PUPD_NONE) {
+      gpio_mode_setup(UnpackPort(portpin_), GPIO_MODE_OUTPUT, pupd,
+          UnpackPin(portpin_));
+    }
+
+    void SetAF(uint32_t af, uint32_t pupd = GPIO_PUPD_NONE) {
+      auto port = UnpackPort(portpin_);
+      auto pin = UnpackPin(portpin_);
+      gpio_mode_setup(port, GPIO_MODE_AF, pupd, pin);
+      gpio_set_af(port, af, pin);
+    }
+
+    void SetAnalog() {
+      gpio_mode_setup(UnpackPort(portpin_), GPIO_MODE_ANALOG, GPIO_PUPD_NONE,
+                      UnpackPin(portpin_));
+    }
+
+    /* pupd is GPIO_PUPD_NONE, GPIO_PUPD_PULLUP, or GPIO_PUPD_PULLDOWN */
+    /* output_type is GPIO_OTYPE_PP (push-pull) or GPIO_OTYPE_OD (open drain) */
+    /* output_speed is GPIO_OSPEED_*MHZ, where * = {2, 25, 50, 100} */
+    void SetOutputOptions(uint32_t output_type, uint32_t output_speed) {
+      gpio_set_output_options(UnpackPort(portpin_), output_type, output_speed,
+                              UnpackPin(portpin_));
+    }
+
+   private:
+    // Only GPIOManager may construct PinAllocations.
+    PinAllocation(GPIOPortPin portpin) : portpin_(portpin) {}
+
+    GPIOPortPin portpin_;
+  };
+
+  friend class PinAllocation;
+
+  // Allocate a pin and turn on the GPIO clock if necessary.
+  PinAllocation AllocatePin(GPIOPortPin portpin) {
+    uint32_t port = UnpackPort(portpin);
+    auto port_index = PortToIndex(port);
+    uint16_t pin = UnpackPin(portpin);
+
+    // We need to turn clock on if we are the first pin to be allocated in this
+    // port.
+    if (in_use_[port_index] == 0x0000) {
+      SetClock(port, true);
+    }
+
+    in_use_[port_index] |= pin;
+
+    return PinAllocation(portpin);
   }
 
  private:
   GPIOManager();
 
-  static size_t PortToIndex(uint32_t port);
-  static void EnableClock(uint32_t port);
+  // This is only called by the destructor of PinAllocation.
+  void DeallocatePin(GPIOPortPin portpin);
 
-  // allocations_[port][pin] is the number of allocations for port + pin
-  // This should be 0 or 1 normally, but we allow higher numbers to
-  // potentially support sharing.
-  std::array<std::array<int, 16>, kNumGPIOPorts> allocations_;
-  std::array<bool, kNumGPIOPorts> port_clock_enabled_;
+  static size_t PortToIndex(uint32_t port);
+  static void SetClock(uint32_t port, bool on);
+
+  // in_use_[port] records whether each pin is in use or not, in a
+  // bitfield for each port.
+  std::array<uint16_t, kNumGPIOPorts> in_use_;
 };
 
+// These are templatized convenience wrappers for libopencm3 GPIO functions.
 template <GPIOPortPin kPortPin>
-class OutputPin : NonCopyable {
+void SetGPIOPin(bool val) {
+  if (val) {
+    gpio_set(UnpackPort(kPortPin), UnpackPin(kPortPin));
+  } else {
+    gpio_clear(UnpackPort(kPortPin), UnpackPin(kPortPin));
+  }
+}
+
+template <GPIOPortPin kPortPin>
+void ToggleGPIOPin() {
+  gpio_toggle(UnpackPort(kPortPin), UnpackPin(kPortPin));
+}
+
+template <GPIOPortPin kPortPin>
+bool ReadGPIOPin() {
+  return !!gpio_get(UnpackPort(kPortPin), UnpackPin(kPortPin));
+}
+
+template <GPIOPortPin kPortPin>
+class OutputPin {
  public:
   /* pupd is GPIO_PUPD_NONE, GPIO_PUPD_PULLUP, or GPIO_PUPD_PULLDOWN */
-  OutputPin(uint32_t pupd = GPIO_PUPD_NONE) {
-    GPIOManager::GetInstance().AllocatePins(UnpackPort(kPortPin),
-      UnpackPin(kPortPin));
-    gpio_mode_setup(UnpackPort(kPortPin), GPIO_MODE_OUTPUT, pupd,
-      UnpackPin(kPortPin));
+  /* output_type is GPIO_OTYPE_PP (push-pull) or GPIO_OTYPE_OD (open drain) */
+  /* output_speed is GPIO_OSPEED_*MHZ, where * = {2, 25, 50, 100} */
+  OutputPin(uint32_t pupd = GPIO_PUPD_NONE,
+            uint32_t output_type = GPIO_OTYPE_PP,
+            uint32_t output_speed = GPIO_OSPEED_25MHZ)
+      : allocation_(GPIOManager::GetInstance().AllocatePin(kPortPin)) {
+    allocation_.SetOutputOptions(output_type, output_speed);
+    allocation_.SetOutput(pupd);
   }
 
   OutputPin& operator=(bool val) {
-    if (val) {
-      gpio_set(UnpackPort(kPortPin), UnpackPin(kPortPin));
-    } else {
-      gpio_clear(UnpackPort(kPortPin), UnpackPin(kPortPin));
-    }
+    SetGPIOPin<kPortPin>(val);
     return *this;
   }
 
   void Toggle() {
-    gpio_toggle(UnpackPort(kPortPin), UnpackPin(kPortPin));
+    ToggleGPIOPin<kPortPin>();
   }
+
+ private:
+  GPIOManager::PinAllocation allocation_;
 };
 
 template <GPIOPortPin kPortPin>
-class InputPin : NonCopyable {
+class InputPin {
  public:
   /* pupd is GPIO_PUPD_NONE, GPIO_PUPD_PULLUP, or GPIO_PUPD_PULLDOWN */
-  InputPin(uint32_t pupd = GPIO_PUPD_NONE) {
-    GPIOManager::GetInstance().AllocatePins(UnpackPort(kPortPin),
-      UnpackPin(kPortPin));
-    gpio_mode_setup(UnpackPort(kPortPin), GPIO_MODE_INPUT, pupd,
-      UnpackPin(kPortPin));
+  InputPin(uint32_t pupd = GPIO_PUPD_NONE)
+      : allocation_(GPIOManager::GetInstance().AllocatePin(kPortPin)) {
+    allocation_.SetInput(pupd);
   }
 
   bool value() const {
-    return gpio_get(UnpackPort(kPortPin), UnpackPin(kPortPin));
+    return ReadGPIOPin<kPortPin>();
   }
 
   operator bool() const {
     return value();
   }
+
+ private:
+  GPIOManager::PinAllocation allocation_;
 };
 
 }; // namespace Ostrich

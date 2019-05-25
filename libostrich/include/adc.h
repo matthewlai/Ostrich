@@ -22,6 +22,8 @@
 
 #include <array>
 #include <cstdint>
+#include <memory>
+#include <optional>
 
 #include <libopencm3/stm32/adc.h>
 #include <libopencm3/stm32/rcc.h>
@@ -71,7 +73,7 @@ constexpr const ADCInfo& GetInfo(uint32_t adc) {
   return kADCInfos[GetIndex(adc)];
 }
 
-class ADCManager : public NonCopyable {
+class ADCManager : public Singleton {
  public:
   static ADCManager& GetInstance() {
     static ADCManager instance;
@@ -126,12 +128,18 @@ class SingleConversionADC : public ADCBase<kADC> {
   SingleConversionADC();
   ~SingleConversionADC();
 
+  // This struct represents a channel allocation. At the moment it only consists
+  // of the underlying GPIO pin allocation. The destruction of the channel
+  // allocation will also lead to the GPIO pin being deallocated.
+  struct ChannelAllocation {
+    std::optional<GPIOManager::PinAllocation> pin_allocation;
+  };
+
   template <uint8_t kChannel>
   class ChannelSampler {
    public:
-    ChannelSampler(SingleConversionADC* adc, bool is_vbatt) : adc_(adc) {
-      adc->EnsureChannelSetup(kChannel, is_vbatt);
-    }
+    ChannelSampler(SingleConversionADC* adc, bool is_vbatt)
+        : adc_(adc), allocation_(adc->SetupChannel(kChannel, is_vbatt)) {}
 
     void SetSamplingTime(uint64_t sampling_time_ns) {
       adc_->SetSamplingTime(kChannel, sampling_time_ns);
@@ -145,16 +153,14 @@ class SingleConversionADC : public ADCBase<kADC> {
 
    protected:
     SingleConversionADC* adc_;
+    ChannelAllocation allocation_;
   };
 
   class TemperatureSampler : public ChannelSampler<kTemperatureChannel> {
    public:
     TemperatureSampler(SingleConversionADC* adc)
-        : ChannelSampler<kTemperatureChannel>(adc, false) {
-      // Make sure we can read VrefInt as well. At this point we know we have
-      // temperature + Vref selected because they share the same enable bit.
-      this->adc_->EnsureChannelSetup(kVrefintChannel, false);
-    }
+        : ChannelSampler<kTemperatureChannel>(adc, false),
+          vref_int_allocation_(adc->SetupChannel(kVrefintChannel, false)) {}
 
     float ReadTempC() {
       // Compute temperature as per RM00410, using Vrefint as reference.
@@ -163,6 +169,10 @@ class SingleConversionADC : public ADCBase<kADC> {
       float vsense = this->ReadU16() * lsb_volts;
       return (vsense - 0.76f) / 0.0025f + 25.0f;
     }
+
+   private:
+    // We use vref for Vref referencing.
+    ChannelAllocation vref_int_allocation_;
   };
 
   template <uint8_t kChannel>
@@ -178,7 +188,7 @@ class SingleConversionADC : public ADCBase<kADC> {
   }
 
  private:
-  void EnsureChannelSetup(int channel, bool is_vbatt);
+  ChannelAllocation SetupChannel(int channel, bool is_vbatt);
   void SetSamplingTime(uint32_t channel, uint64_t sampling_time_ns);
 
   template <uint8_t kChannel>

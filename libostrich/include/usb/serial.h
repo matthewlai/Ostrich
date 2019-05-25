@@ -90,6 +90,9 @@ class USBSerial : public BufferedInputStream<512>,
   usb_interface_descriptor GetDataInterface();
   CDCFunctionalDescriptors GetCDCFunctionalDescriptors();
 
+  GPIOManager::PinAllocation pin_allocation_dm_;
+  GPIOManager::PinAllocation pin_allocation_dp_;
+
   usbd_device* usbd_dev_;
   usb_device_descriptor dev_descriptor_;
   usb_config_descriptor config_descriptor_;

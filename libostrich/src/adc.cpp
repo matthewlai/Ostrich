@@ -77,10 +77,14 @@ SingleConversionADC<kADC>::~SingleConversionADC() {
 }
 
 template <uint32_t kADC>
-void SingleConversionADC<kADC>::EnsureChannelSetup(int channel, bool is_vbatt) {
+typename SingleConversionADC<kADC>::ChannelAllocation
+SingleConversionADC<kADC>::SetupChannel(int channel, bool is_vbatt) {
   const ChannelInfo& ci = kADCChannelInfos[GetIndex(kADC)][channel];
+  ChannelAllocation allocation;
   if (ci.channel_type == ChannelType::kGPIO) {
-    GPIOManager::GetInstance().AllocateAnalogPin(ci.port_pin);
+    *allocation.pin_allocation =
+        GPIOManager::GetInstance().AllocatePin(ci.port_pin);
+    allocation.pin_allocation->SetAnalog();
   } else if (ci.channel_type == ChannelType::kVrefint) {
     if (!vref_vsense_on_) {
       adc_disable_vbat_sensor();
@@ -126,6 +130,8 @@ void SingleConversionADC<kADC>::EnsureChannelSetup(int channel, bool is_vbatt) {
       }
     }
   }
+
+  return allocation;
 }
 
 template <uint32_t kADC>

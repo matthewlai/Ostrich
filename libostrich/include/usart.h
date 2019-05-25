@@ -121,7 +121,9 @@ class USART : public BufferedInputStream<1024>, public UnbufferedOutputStream {
  public:
   USART(uint32_t baud_rate, uint32_t data_bits = 8, uint32_t stop_bits = 1,
         uint32_t parity = USART_PARITY_NONE) 
-    : info_(UsartInfo(kUsart)) {
+    : tx_allocation_(GPIOManager::GetInstance().AllocatePin(kTxPin)),
+      rx_allocation_(GPIOManager::GetInstance().AllocatePin(kRxPin)),
+      info_(UsartInfo(kUsart)) {
 
     USARTManager::GetInstance().AllocateUSART(kUsart);
 
@@ -144,8 +146,8 @@ class USART : public BufferedInputStream<1024>, public UnbufferedOutputStream {
     if (tx_af == -1) { HandleError("USART TX pin invalid"); }
     if (rx_af == -1) { HandleError("USART RX pin invalid"); }
 
-    GPIOManager::GetInstance().AllocateAFPin(kTxPin, tx_af);
-    GPIOManager::GetInstance().AllocateAFPin(kRxPin, rx_af);
+    tx_allocation_.SetAF(tx_af);
+    rx_allocation_.SetAF(rx_af);
 
     rcc_periph_clock_enable(info_.usart_rcc);
 
@@ -197,6 +199,9 @@ class USART : public BufferedInputStream<1024>, public UnbufferedOutputStream {
   }
 
  private:
+  GPIOManager::PinAllocation tx_allocation_;
+  GPIOManager::PinAllocation rx_allocation_;
+
   const USARTInfo& info_;
   volatile CircularQueue<1024> receive_buffer_;
 };

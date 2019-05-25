@@ -22,13 +22,25 @@
 
 namespace Ostrich {
 
-class NonCopyable {
+class Singleton {
  protected:
-	NonCopyable() {}
-	~NonCopyable() {} // Do not allow deleting through base pointer
+	Singleton() {}
+	~Singleton() {} // Do not allow deleting through base pointer
  private:
-	NonCopyable(const NonCopyable&) = delete;
-	NonCopyable& operator=(const NonCopyable&) = delete;
+	Singleton(const Singleton&) = delete;
+	Singleton& operator=(const Singleton&) = delete;
+};
+
+class NonCopyable {
+ public:
+  NonCopyable() {}
+
+  NonCopyable(NonCopyable&&) {}
+  NonCopyable& operator=(NonCopyable&&) { return *this; }
+
+ private:
+  NonCopyable(const NonCopyable&) = delete;
+  NonCopyable& operator=(const NonCopyable&) = delete;
 };
 
 }; // namespace Ostrich
