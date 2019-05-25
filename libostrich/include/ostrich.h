@@ -104,7 +104,9 @@ class ScopedIRQLock {
 };
 
 inline void HandleError(const std::string& msg) {
-  g_error_handler(msg);
+  if (g_error_handler) {
+    g_error_handler(msg);
+  }
 }
 
 inline void SetErrorHandler(ErrorHandler eh) {
@@ -112,7 +114,9 @@ inline void SetErrorHandler(ErrorHandler eh) {
 }
 
 inline void Log(const std::string& msg) {
-  g_logging_handler(msg);
+  if (g_logging_handler) {
+    g_logging_handler(msg);
+  }
 }
 
 inline void SetLoggingHandler(LoggingHandler lh) {
