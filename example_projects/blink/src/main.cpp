@@ -21,8 +21,7 @@
 #include "ostrich.h"
 #include "systick.h"
 
-using Ostrich::OutputPin;
-using namespace Ostrich::GpioDef;
+using namespace Ostrich;
 
 OutputPin<PIN_B4> led_0;
 OutputPin<PIN_B5> led_1;
@@ -30,9 +29,9 @@ OutputPin<PIN_B6> led_2;
 OutputPin<PIN_B7> led_3;
 
 void Sleep(uint64_t milliseconds) {
-  auto end = Ostrich::GetTimeMilliseconds() + milliseconds;
-  while (Ostrich::GetTimeMilliseconds() < end) {
-    Ostrich::WaitForInterrupt();
+  auto end = GetTimeMilliseconds() + milliseconds;
+  while (GetTimeMilliseconds() < end) {
+    WaitForInterrupt();
   }
 }
 

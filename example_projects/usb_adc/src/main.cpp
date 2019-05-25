@@ -24,8 +24,7 @@
 #include "systick.h"
 #include "usb/serial.h"
 
-using Ostrich::USBSerial;
-using Ostrich::SingleConversionADC;
+using namespace Ostrich;
 
 int main() {
   USBSerial serial;
@@ -36,7 +35,7 @@ int main() {
   while (true) {
     if (serial.PortOpen()) {
       serial << temp_sampler.ReadTempC() << std::endl;
-      Ostrich::DelayMilliseconds(1000);
+      DelayMilliseconds(1000);
     }
   }
 }

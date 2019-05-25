@@ -70,8 +70,8 @@ USBSerial::USBSerial(uint16_t vid, uint16_t pid, uint16_t current_ma,
     HandleError("Only one USB service can be instantiated at a time.");
   }
 
-  GPIOManager::GetInstance().AllocateAFPin(GpioDef::PIN_A11, GPIO_AF10);
-  GPIOManager::GetInstance().AllocateAFPin(GpioDef::PIN_A12, GPIO_AF10);
+  GPIOManager::GetInstance().AllocateAFPin(PIN_A11, GPIO_AF10);
+  GPIOManager::GetInstance().AllocateAFPin(PIN_A12, GPIO_AF10);
 
   desig_get_unique_id_as_dfu(unique_id_);
 

@@ -25,10 +25,7 @@
 #include "usart.h"
 #include "usb/serial.h"
 
-using Ostrich::USBSerial;
-using Ostrich::USART;
-using Ostrich::OutputPin;
-using namespace Ostrich::GpioDef;
+using namespace Ostrich;
 
 constexpr auto kUartTxPin = PIN_G14;
 constexpr auto kUartRxPin = PIN_G9;
@@ -38,11 +35,11 @@ constexpr auto kFlushIntervalMilliseconds = 10;
 int main() {
   USBSerial usb_serial;
 
-  Ostrich::SetErrorHandler([&usb_serial](const std::string& error) {
+  SetErrorHandler([&usb_serial](const std::string& error) {
     usb_serial << error << std::endl;
   });
 
-  Ostrich::SetLoggingHandler([&usb_serial](const std::string& log) {
+  SetLoggingHandler([&usb_serial](const std::string& log) {
     usb_serial << log << std::endl;
   });
 
@@ -54,7 +51,7 @@ int main() {
   using UsartPortType = USART<kUart, kUartTxPin, kUartRxPin>;
   auto usart = std::make_unique<UsartPortType>(baud_rate);
 
-  uint64_t last_flush_time = Ostrich::GetTimeMilliseconds();
+  uint64_t last_flush_time = GetTimeMilliseconds();
 
   while (true) {
     auto usb_available = usb_serial.DataAvailable();
@@ -80,7 +77,7 @@ int main() {
     }
 
     // Don't let data sit in the buffer for too long.
-    uint64_t now = Ostrich::GetTimeMilliseconds();
+    uint64_t now = GetTimeMilliseconds();
     if ((now - last_flush_time) > kFlushIntervalMilliseconds) {
       usart->Flush();
       usb_serial.Flush();

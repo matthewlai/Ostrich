@@ -39,8 +39,6 @@ constexpr uint16_t UnpackPin(GPIOPortPin portpin) {
   return static_cast<uint16_t>(portpin & 0xffff);
 }
 
-namespace GpioDef {
-
 constexpr GPIOPortPin PIN_A0 = (static_cast<uint64_t>(GPIOA) << 32) | (1 << 0);
 constexpr GPIOPortPin PIN_A1 = (static_cast<uint64_t>(GPIOA) << 32) | (1 << 1);
 constexpr GPIOPortPin PIN_A2 = (static_cast<uint64_t>(GPIOA) << 32) | (1 << 2);
@@ -219,9 +217,6 @@ constexpr GPIOPortPin PIN_K14 = (static_cast<uint64_t>(GPIOK) << 32) | (1 << 14)
 constexpr GPIOPortPin PIN_K15 = (static_cast<uint64_t>(GPIOK) << 32) | (1 << 15);
 
 constexpr GPIOPortPin PIN_INVALID = 0;
-
-
-}; // namespace Gpio
 
 }; // namespace Ostrich
 

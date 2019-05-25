@@ -22,7 +22,7 @@
 #include "ostrich.h"
 #include "usb/serial.h"
 
-using Ostrich::USBSerial;
+using namespace Ostrich;
 
 int main() {
   USBSerial serial;

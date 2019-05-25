@@ -41,69 +41,69 @@ struct ChannelInfo {
 constexpr std::array<ChannelInfo, 19> kADCChannelInfos[3] = {
   {{
     // ADC1
-    {ChannelType::kGPIO, GpioDef::PIN_A0},  // Channel 0
-    {ChannelType::kGPIO, GpioDef::PIN_A1},  // Channel 1
-    {ChannelType::kGPIO, GpioDef::PIN_A2},  // Channel 2
-    {ChannelType::kGPIO, GpioDef::PIN_A3},  // Channel 3
-    {ChannelType::kGPIO, GpioDef::PIN_A4},  // Channel 4
-    {ChannelType::kGPIO, GpioDef::PIN_A5},  // Channel 5
-    {ChannelType::kGPIO, GpioDef::PIN_A6},  // Channel 6
-    {ChannelType::kGPIO, GpioDef::PIN_A7},  // Channel 7
-    {ChannelType::kGPIO, GpioDef::PIN_B0},  // Channel 8
-    {ChannelType::kGPIO, GpioDef::PIN_B1},  // Channel 9
-    {ChannelType::kGPIO, GpioDef::PIN_C0},  // Channel 10
-    {ChannelType::kGPIO, GpioDef::PIN_C1},  // Channel 11
-    {ChannelType::kGPIO, GpioDef::PIN_C2},  // Channel 12
-    {ChannelType::kGPIO, GpioDef::PIN_C3},  // Channel 13
-    {ChannelType::kGPIO, GpioDef::PIN_C4},  // Channel 14
-    {ChannelType::kGPIO, GpioDef::PIN_C5},  // Channel 15
-    {ChannelType::kNC, GpioDef::PIN_INVALID},  // Channel 16
-    {ChannelType::kVrefint, GpioDef::PIN_INVALID},  // Channel 17
-    {ChannelType::kTempVbatt, GpioDef::PIN_INVALID},  // Channel 18
+    {ChannelType::kGPIO, PIN_A0},  // Channel 0
+    {ChannelType::kGPIO, PIN_A1},  // Channel 1
+    {ChannelType::kGPIO, PIN_A2},  // Channel 2
+    {ChannelType::kGPIO, PIN_A3},  // Channel 3
+    {ChannelType::kGPIO, PIN_A4},  // Channel 4
+    {ChannelType::kGPIO, PIN_A5},  // Channel 5
+    {ChannelType::kGPIO, PIN_A6},  // Channel 6
+    {ChannelType::kGPIO, PIN_A7},  // Channel 7
+    {ChannelType::kGPIO, PIN_B0},  // Channel 8
+    {ChannelType::kGPIO, PIN_B1},  // Channel 9
+    {ChannelType::kGPIO, PIN_C0},  // Channel 10
+    {ChannelType::kGPIO, PIN_C1},  // Channel 11
+    {ChannelType::kGPIO, PIN_C2},  // Channel 12
+    {ChannelType::kGPIO, PIN_C3},  // Channel 13
+    {ChannelType::kGPIO, PIN_C4},  // Channel 14
+    {ChannelType::kGPIO, PIN_C5},  // Channel 15
+    {ChannelType::kNC, PIN_INVALID},  // Channel 16
+    {ChannelType::kVrefint, PIN_INVALID},  // Channel 17
+    {ChannelType::kTempVbatt, PIN_INVALID},  // Channel 18
   }},
   {{
     // ADC2
-    {ChannelType::kGPIO, GpioDef::PIN_A0},  // Channel 0
-    {ChannelType::kGPIO, GpioDef::PIN_A1},  // Channel 1
-    {ChannelType::kGPIO, GpioDef::PIN_A2},  // Channel 2
-    {ChannelType::kGPIO, GpioDef::PIN_A3},  // Channel 3
-    {ChannelType::kGPIO, GpioDef::PIN_A4},  // Channel 4
-    {ChannelType::kGPIO, GpioDef::PIN_A5},  // Channel 5
-    {ChannelType::kGPIO, GpioDef::PIN_A6},  // Channel 6
-    {ChannelType::kGPIO, GpioDef::PIN_A7},  // Channel 7
-    {ChannelType::kGPIO, GpioDef::PIN_B0},  // Channel 8
-    {ChannelType::kGPIO, GpioDef::PIN_B1},  // Channel 9
-    {ChannelType::kGPIO, GpioDef::PIN_C0},  // Channel 10
-    {ChannelType::kGPIO, GpioDef::PIN_C1},  // Channel 11
-    {ChannelType::kGPIO, GpioDef::PIN_C2},  // Channel 12
-    {ChannelType::kGPIO, GpioDef::PIN_C3},  // Channel 13
-    {ChannelType::kGPIO, GpioDef::PIN_C4},  // Channel 14
-    {ChannelType::kGPIO, GpioDef::PIN_C5},  // Channel 15
-    {ChannelType::kNC, GpioDef::PIN_INVALID},  // Channel 16
-    {ChannelType::kNC, GpioDef::PIN_INVALID},  // Channel 17
-    {ChannelType::kNC, GpioDef::PIN_INVALID},  // Channel 18
+    {ChannelType::kGPIO, PIN_A0},  // Channel 0
+    {ChannelType::kGPIO, PIN_A1},  // Channel 1
+    {ChannelType::kGPIO, PIN_A2},  // Channel 2
+    {ChannelType::kGPIO, PIN_A3},  // Channel 3
+    {ChannelType::kGPIO, PIN_A4},  // Channel 4
+    {ChannelType::kGPIO, PIN_A5},  // Channel 5
+    {ChannelType::kGPIO, PIN_A6},  // Channel 6
+    {ChannelType::kGPIO, PIN_A7},  // Channel 7
+    {ChannelType::kGPIO, PIN_B0},  // Channel 8
+    {ChannelType::kGPIO, PIN_B1},  // Channel 9
+    {ChannelType::kGPIO, PIN_C0},  // Channel 10
+    {ChannelType::kGPIO, PIN_C1},  // Channel 11
+    {ChannelType::kGPIO, PIN_C2},  // Channel 12
+    {ChannelType::kGPIO, PIN_C3},  // Channel 13
+    {ChannelType::kGPIO, PIN_C4},  // Channel 14
+    {ChannelType::kGPIO, PIN_C5},  // Channel 15
+    {ChannelType::kNC, PIN_INVALID},  // Channel 16
+    {ChannelType::kNC, PIN_INVALID},  // Channel 17
+    {ChannelType::kNC, PIN_INVALID},  // Channel 18
   }},
   {{
     // ADC3
-    {ChannelType::kGPIO, GpioDef::PIN_A0},  // Channel 0
-    {ChannelType::kGPIO, GpioDef::PIN_A1},  // Channel 1
-    {ChannelType::kGPIO, GpioDef::PIN_A2},  // Channel 2
-    {ChannelType::kGPIO, GpioDef::PIN_A3},  // Channel 3
-    {ChannelType::kGPIO, GpioDef::PIN_F6},  // Channel 4
-    {ChannelType::kGPIO, GpioDef::PIN_F7},  // Channel 5
-    {ChannelType::kGPIO, GpioDef::PIN_F8},  // Channel 6
-    {ChannelType::kGPIO, GpioDef::PIN_F9},  // Channel 7
-    {ChannelType::kGPIO, GpioDef::PIN_F10},  // Channel 8
-    {ChannelType::kGPIO, GpioDef::PIN_F3},  // Channel 9
-    {ChannelType::kGPIO, GpioDef::PIN_C0},  // Channel 10
-    {ChannelType::kGPIO, GpioDef::PIN_C1},  // Channel 11
-    {ChannelType::kGPIO, GpioDef::PIN_C2},  // Channel 12
-    {ChannelType::kGPIO, GpioDef::PIN_C3},  // Channel 13
-    {ChannelType::kGPIO, GpioDef::PIN_F4},  // Channel 14
-    {ChannelType::kGPIO, GpioDef::PIN_F5},  // Channel 15
-    {ChannelType::kNC, GpioDef::PIN_INVALID},  // Channel 16
-    {ChannelType::kNC, GpioDef::PIN_INVALID},  // Channel 17
-    {ChannelType::kNC, GpioDef::PIN_INVALID},  // Channel 18
+    {ChannelType::kGPIO, PIN_A0},  // Channel 0
+    {ChannelType::kGPIO, PIN_A1},  // Channel 1
+    {ChannelType::kGPIO, PIN_A2},  // Channel 2
+    {ChannelType::kGPIO, PIN_A3},  // Channel 3
+    {ChannelType::kGPIO, PIN_F6},  // Channel 4
+    {ChannelType::kGPIO, PIN_F7},  // Channel 5
+    {ChannelType::kGPIO, PIN_F8},  // Channel 6
+    {ChannelType::kGPIO, PIN_F9},  // Channel 7
+    {ChannelType::kGPIO, PIN_F10},  // Channel 8
+    {ChannelType::kGPIO, PIN_F3},  // Channel 9
+    {ChannelType::kGPIO, PIN_C0},  // Channel 10
+    {ChannelType::kGPIO, PIN_C1},  // Channel 11
+    {ChannelType::kGPIO, PIN_C2},  // Channel 12
+    {ChannelType::kGPIO, PIN_C3},  // Channel 13
+    {ChannelType::kGPIO, PIN_F4},  // Channel 14
+    {ChannelType::kGPIO, PIN_F5},  // Channel 15
+    {ChannelType::kNC, PIN_INVALID},  // Channel 16
+    {ChannelType::kNC, PIN_INVALID},  // Channel 17
+    {ChannelType::kNC, PIN_INVALID},  // Channel 18
   }}
 };
 
