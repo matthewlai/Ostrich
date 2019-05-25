@@ -28,23 +28,16 @@ OutputPin<PIN_B5> led_1;
 OutputPin<PIN_B6> led_2;
 OutputPin<PIN_B7> led_3;
 
-void Sleep(uint64_t milliseconds) {
-  auto end = GetTimeMilliseconds() + milliseconds;
-  while (GetTimeMilliseconds() < end) {
-    WaitForInterrupt();
-  }
-}
-
 int main() {
   while (true) {
-    Sleep(1000);
+    DelayMilliseconds(1000);
 
     led_0 = 0;
     led_1 = 1;
     led_2 = 0;
     led_3 = 1;
 
-    Sleep(1000);
+    DelayMilliseconds(1000);
 
     led_0 = 1;
     led_1 = 0;
