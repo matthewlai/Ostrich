@@ -54,8 +54,6 @@ int main() {
 
   I2C<I2C4, PIN_D13, PIN_D12> i2c(I2CSpeed::Speed100kHz);
 
-  usb_serial << "Begin:" << std::endl;
-
   while (true) {
     auto moisture = ReadRegister(&i2c, kMoistureRegister);
     auto temperature = ReadRegister(&i2c, kTemperatureRegister);
