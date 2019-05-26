@@ -69,10 +69,6 @@ struct BoardConfig {
 // This should be defined by the user.
 BoardConfig MakeBoardConfig();
 
-inline void WaitForInterrupt() {
-  __asm__("wfi");
-}
-
 // Lock up the microcontroller in a spin loop for debugging. Called when
 // something is wrong.
 inline void LockUp() {
