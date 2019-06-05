@@ -228,11 +228,11 @@ class I2C : public NonCopyable {
   // (everything acked).
   // Maximum transfer size is 256 bytes.
   bool Send(uint8_t addr, const uint8_t* data, std::size_t len) {
-    SendReceive(addr, data, len);
+    return SendReceive(addr, data, len);
   }
 
   bool Receive(uint8_t addr, uint8_t* buf, std::size_t len) {
-    SendReceive(addr, nullptr, 0, buf, len);
+    return SendReceive(addr, nullptr, 0, buf, len);
   }
 
   // Write write_len bytes, then read read_len bytes, with a repeated start

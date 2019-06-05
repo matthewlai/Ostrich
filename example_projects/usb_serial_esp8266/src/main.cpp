@@ -52,7 +52,10 @@ int main() {
   esp8266_chen = 0;
   esp8266_rst = 0;
   DelayMilliseconds(1);
-  esp8266_gpio0 = 1;
+
+  // 0 for programming mode, 1 for normal operation
+  esp8266_gpio0 = 0;
+
   DelayMilliseconds(1);
   esp8266_chen = 1;
   esp8266_rst = 1;

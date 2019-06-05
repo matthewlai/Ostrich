@@ -42,8 +42,8 @@ std::array<const I2CInfo, kNumI2Cs> kI2CInfo{{
     {{PIN_C9, 4}, {PIN_H8, 4}},
     {{PIN_A8, 4}, {PIN_H7, 4}}},
 {I2C4, RCC_I2C4, NVIC_I2C4_EV_IRQ, "I2C4",
-    {{PIN_D13, 4}, {PIN_H5, 4}, {PIN_H12, 4}},
-    {{PIN_D12, 4}, {PIN_H4, 4}, {PIN_H11, 4}}},
+    {{PIN_D13, 4}, {PIN_H5, 4}, {PIN_H12, 4}, {PIN_F15, 4}},
+    {{PIN_D12, 4}, {PIN_H4, 4}, {PIN_H11, 4}, {PIN_F14, 4}}},
 }};
 
 }; // namespace Ostrich

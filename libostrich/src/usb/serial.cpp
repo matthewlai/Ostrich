@@ -99,12 +99,14 @@ USBSerial::~USBSerial() {
 }
 
 void USBSerial::OutputImpl(const char* data, std::size_t len) {
-  ScopedIRQLock irq_lock(NVIC_OTG_FS_IRQ);
-  std::size_t length_written = 0;
-  while (length_written < len) {
-    std::size_t packet_size = std::min((len - length_written), 64u);
-    length_written += usbd_ep_write_packet(usbd_dev_, 0x82,
-                                           data + length_written, packet_size);
+  if (dtr_) {
+    ScopedIRQLock irq_lock(NVIC_OTG_FS_IRQ);
+    std::size_t length_written = 0;
+    while (length_written < len) {
+      std::size_t packet_size = std::min((len - length_written), 64u);
+      length_written += usbd_ep_write_packet(usbd_dev_, 0x82,
+                                             data + length_written, packet_size);
+    }
   }
 }
 

@@ -56,8 +56,12 @@ class CircularQueue {
     return c;
   }
 
+  char Peek(std::size_t i) const volatile {
+    return buf_[(pop_pos_ + i) % kSize];
+  }
+
   char Peek() const volatile {
-    return buf_[pop_pos_];
+    return Peek(0);
   }
 
   bool Empty() const volatile {
@@ -156,6 +160,17 @@ class BufferedInputStream {
       }
     } while (true);
     return ret;
+  }
+
+  // LineAvailable() is true if GetLine() would not block.
+  bool LineAvailable() {
+    std::size_t available = input_buffer_.Available();
+    for (std::size_t i = 0; i < available; ++i) {
+      if (input_buffer_.Peek(i) == '\n') {
+        return true;
+      }
+    }
+    return false;
   }
 
   void Read(char* buf, std::size_t size) {
@@ -371,6 +386,22 @@ class BufferedOutputStream {
 };
 
 using UnbufferedOutputStream = BufferedOutputStream<0>;
+
+template <std::size_t kBufferSize>
+class StringStream 
+  : public BufferedInputStream<kBufferSize>,
+    public UnbufferedOutputStream {
+ public:
+  StringStream(const std::string& str) {
+    BufferedInputStream<kBufferSize>::AddDataToBuffer(
+      str.data(), str.size());
+  }
+
+ protected:
+  void OutputImpl(const char* data, std::size_t len) override {
+    BufferedInputStream<kBufferSize>::AddDataToBuffer(data, len);
+  }
+};
 
 } // namespace Ostrich
 

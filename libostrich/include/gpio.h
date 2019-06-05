@@ -183,6 +183,11 @@ class OutputPin {
     allocation_.SetOutput(pupd);
   }
 
+  void SetOutputOptions(uint32_t output_type = GPIO_OTYPE_PP,
+                        uint32_t output_speed = GPIO_OSPEED_25MHZ) {
+    allocation_.SetOutputOptions(output_type, output_speed);
+  }
+
   OutputPin& operator=(bool val) {
     SetGPIOPin<kPortPin>(val);
     return *this;

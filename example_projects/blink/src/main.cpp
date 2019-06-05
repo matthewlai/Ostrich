@@ -30,18 +30,18 @@ OutputPin<PIN_B7> led_3;
 
 int main() {
   while (true) {
-    DelayMilliseconds(1000);
-
     led_0 = 0;
     led_1 = 1;
     led_2 = 0;
     led_3 = 1;
-
+    
     DelayMilliseconds(1000);
 
     led_0 = 1;
     led_1 = 0;
     led_2 = 1;
     led_3 = 0;
+
+    DelayMilliseconds(1000);
   }
 }
