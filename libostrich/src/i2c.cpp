@@ -32,16 +32,16 @@ extern "C" {
 namespace Ostrich {
 
 std::array<const I2CInfo, kNumI2Cs> kI2CInfo{{
-{I2C1, RCC_I2C1, NVIC_I2C1_EV_IRQ, "I2C1",
+{I2C1, RCC_I2C1, RST_I2C1, NVIC_I2C1_EV_IRQ, "I2C1",
     {{PIN_B7, 4}, {PIN_B9, 4}},
     {{PIN_B6, 4}, {PIN_B8, 4}}},
-{I2C2, RCC_I2C2, NVIC_I2C2_EV_IRQ, "I2C2",
+{I2C2, RCC_I2C2, RST_I2C2, NVIC_I2C2_EV_IRQ, "I2C2",
     {{PIN_F0, 4}, {PIN_B11, 4}, {PIN_H5, 4}},
     {{PIN_F1, 4}, {PIN_B10, 4}, {PIN_H4, 4}}},
-{I2C3, RCC_I2C3, NVIC_I2C3_EV_IRQ, "I2C3",
+{I2C3, RCC_I2C3, RST_I2C3, NVIC_I2C3_EV_IRQ, "I2C3",
     {{PIN_C9, 4}, {PIN_H8, 4}},
     {{PIN_A8, 4}, {PIN_H7, 4}}},
-{I2C4, RCC_I2C4, NVIC_I2C4_EV_IRQ, "I2C4",
+{I2C4, RCC_I2C4, RST_I2C4, NVIC_I2C4_EV_IRQ, "I2C4",
     {{PIN_D13, 4}, {PIN_H5, 4}, {PIN_H12, 4}, {PIN_F15, 4}},
     {{PIN_D12, 4}, {PIN_H4, 4}, {PIN_H11, 4}, {PIN_F14, 4}}},
 }};

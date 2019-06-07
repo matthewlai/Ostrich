@@ -28,6 +28,7 @@
 
 #include "gpio.h"
 #include "ostrich.h"
+#include "systick.h"
 #include "util.h"
 
 namespace Ostrich {
@@ -42,6 +43,7 @@ struct I2CInfo {
 
   uint32_t i2c_base;
   rcc_periph_clken i2c_rcc;
+  rcc_periph_rst i2c_rst;
   uint8_t irq;
   const char* str_name;
 
@@ -104,6 +106,8 @@ constexpr std::array<I2CSpeedParams, kNumI2CSpeeds> kI2CSpeedSettings = {{
   {8000000, 0x3, 0x1, 0x0, 0x1},
 }};
 
+constexpr int64_t kTransferTimeoutMilliseconds = 100;
+
 
 class I2CManager : public NonCopyable {
  public:
@@ -158,7 +162,8 @@ class I2C : public NonCopyable {
   I2C(I2CSpeed speed) 
     : sda_allocation_(GPIOManager::GetInstance().AllocatePin(kSDAPin)),
       scl_allocation_(GPIOManager::GetInstance().AllocatePin(kSCLPin)),
-      info_(GetI2CInfo(kI2C)) {
+      info_(GetI2CInfo(kI2C)),
+      speed_(speed) {
 
     I2CManager::GetInstance().AllocateI2C(kI2C);
 
@@ -189,8 +194,14 @@ class I2C : public NonCopyable {
 
     rcc_periph_clock_enable(info_.i2c_rcc);
 
+    ResetAndSetup();
+  }
+
+  void ResetAndSetup() {
+    rcc_periph_reset_pulse(info_.i2c_rst);
+
     // Setup.
-    const auto& speed_settings = kI2CSpeedSettings[static_cast<int>(speed)];
+    const auto& speed_settings = kI2CSpeedSettings[static_cast<int>(speed_)];
 
     // Calculate prescalar based on APB1 clocks.
     uint32_t prescalar_setting = 0;
@@ -241,6 +252,11 @@ class I2C : public NonCopyable {
   bool SendReceive(uint8_t addr, const uint8_t* write_data = nullptr,
                    std::size_t write_len = 0, uint8_t* read_buf = nullptr,
                    std::size_t read_len = 0) {
+    int64_t timeout = GetTimeMilliseconds() + kTransferTimeoutMilliseconds;
+    auto timed_out = [timeout]() -> bool {
+      return static_cast<int64_t>(GetTimeMilliseconds()) > timeout;
+    };
+
     /*  waiting for busy is unnecessary. read the RM */
     if (write_data) {
       i2c_set_7bit_address(kI2C, addr);
@@ -255,9 +271,15 @@ class I2C : public NonCopyable {
 
       for (std::size_t i = 0; i < write_len; ++i) {
         // Wait till we are either cleared to transmit or we got NACKed.
-        while (!i2c_transmit_int_status(kI2C)) {
+        while (!(i2c_transmit_int_status(kI2C))) {
           if (i2c_nack(kI2C)) {
             HandleError("I2C NACK received");
+            return false;
+          }
+
+          if (timed_out()) {
+            HandleError("I2C Timed out");
+            ResetAndSetup();
             return false;
           }
         }
@@ -269,7 +291,12 @@ class I2C : public NonCopyable {
        * RM implies it will stall until it can write out the later bits
        */
       if (read_buf) {
-        while (!i2c_transfer_complete(kI2C));
+        while (!i2c_transfer_complete(kI2C) && (!timed_out())) {}
+        if (timed_out()) {
+          HandleError("I2C Timed out");
+          ResetAndSetup();
+          return false;
+        }
       }
     }
 
@@ -283,7 +310,12 @@ class I2C : public NonCopyable {
       i2c_enable_autoend(kI2C);
 
       for (std::size_t i = 0; i < read_len; i++) {
-        while (i2c_received_data(kI2C) == 0) {}
+        while (i2c_received_data(kI2C) == 0 && !timed_out()) {}
+        if (timed_out()) {
+          HandleError("I2C Timed out");
+          ResetAndSetup();
+          return false;
+        }
         read_buf[i] = i2c_get_data(kI2C);
       }
     }
@@ -296,6 +328,7 @@ class I2C : public NonCopyable {
   GPIOManager::PinAllocation scl_allocation_;
 
   const I2CInfo& info_;
+  I2CSpeed speed_;
 };
 
 }; // namespace Ostrich
