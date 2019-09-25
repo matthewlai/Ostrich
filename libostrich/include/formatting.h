@@ -45,22 +45,20 @@ inline std::string Format(T x, int base = 10) {
     x *= -1;
   }
 
+  if (x == 0) {
+    return "0";
+  }
+
   using U = typename std::make_unsigned<T>::type;
-  U x_abs = static_cast<U>(x);
-  U divider = 1;
-  while ((divider * base) <= x_abs) {
-    divider *= base;
+  U x_u = static_cast<U>(x);
+  while (x_u) {
+    U quotient = x_u / base;
+    U remainder = x_u % base;
+    ret.push_back(kDigits[remainder]);
+    x_u = quotient;
   }
 
-  while (divider > 0) {
-    U quotient = x / divider;
-    U remainder = x % divider;
-    ret.push_back(kDigits[quotient]);
-    x = remainder;
-    divider /= base;
-  }
-
-  return ret;
+  return std::string(ret.rbegin(), ret.rend());
 }
 
 // Some simple standard library replacement functions for size (these functions
