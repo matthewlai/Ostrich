@@ -51,14 +51,17 @@ inline std::string Format(T x, int base = 10) {
 
   using U = typename std::make_unsigned<T>::type;
   U x_u = static_cast<U>(x);
+  std::string val;
   while (x_u) {
     U quotient = x_u / base;
     U remainder = x_u % base;
-    ret.push_back(kDigits[remainder]);
+    val.push_back(kDigits[remainder]);
     x_u = quotient;
   }
 
-  return std::string(ret.rbegin(), ret.rend());
+  ret += std::string(val.rbegin(), val.rend());
+
+  return ret;
 }
 
 // Some simple standard library replacement functions for size (these functions
