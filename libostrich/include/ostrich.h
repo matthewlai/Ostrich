@@ -58,7 +58,8 @@ struct BoardConfig {
 
   // How often we do housekeeping in AHB (usually the same as CPU) clock cycles.
   // Reasonable values are in the hundreds, so the CPU doesn't spend excessive
-  // amount of time servicing systick interrupts.
+  // amount of time servicing systick interrupts. This also determines step
+  // size of the time functions.
   uint64_t systick_period_clocks;
 
   // Power supply voltage in 100mV increments. This is used to determine
